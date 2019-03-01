@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 
-
 class OceanLuxuryHome:
     def __init__(self, master):
         self.banner = ttk.Label(master, text="Ocean Luxury Banner")
@@ -54,8 +53,8 @@ class OceanLuxuryHome:
 
     def login_press(self):
         self.clear_center()
-        self.username = ttk.Label(self.center_frame, text="Username:").grid(column=0, row=0)
-        self.password = ttk.Label(self.center_frame, text="Password:").grid(column=0, row=1)
+        self.username = ttk.Label(self.center_frame, text="Username ").grid(column=0, row=0)
+        self.password = ttk.Label(self.center_frame, text="Password ").grid(column=0, row=1)
         self.un_entry = ttk.Entry(self.center_frame).grid(column=1, row=0)
         self.pw_entry = ttk.Entry(self.center_frame).grid(column=1, row=1)
         self.login_confirm = ttk.Button(self.center_frame, text="Log-in").grid(column=0, row=2, columnspan=2)
@@ -63,10 +62,10 @@ class OceanLuxuryHome:
 
     def signup_press(self):
         self.clear_center()
-        self.username = ttk.Label(self.center_frame, text="Username:").grid(column=0, row=0)
-        self.password = ttk.Label(self.center_frame, text="Password:").grid(column=0, row=1)
-        self.fname = ttk.Label(self.center_frame, text="First Name:").grid(column=0, row=2)
-        self.lname = ttk.Label(self.center_frame, text="Last Name:").grid(column=0, row=3)
+        self.username = ttk.Label(self.center_frame, text="Username ").grid(column=0, row=0)
+        self.password = ttk.Label(self.center_frame, text="Password ").grid(column=0, row=1)
+        self.fname = ttk.Label(self.center_frame, text="First Name ").grid(column=0, row=2)
+        self.lname = ttk.Label(self.center_frame, text="Last Name ").grid(column=0, row=3)
         self.un_entry = ttk.Entry(self.center_frame).grid(column=1, row=0)
         self.pw_entry = ttk.Entry(self.center_frame).grid(column=1, row=1)
         self.fn_entry = ttk.Entry(self.center_frame).grid(column=1, row=2)
@@ -76,12 +75,19 @@ class OceanLuxuryHome:
 
     def booking_press(self):
         self.clear_center()
+        self.date = ttk.Label(self.center_frame, text="Date ").grid(column=0, row=0)
+        self.un_entry = ttk.Entry(self.center_frame, width=2).grid(column=1, row=0)
+        self.date = ttk.Label(self.center_frame, text="/").grid(column=2, row=0)
+        self.un_entry = ttk.Entry(self.center_frame, width=2).grid(column=3, row=0)
+        self.date = ttk.Label(self.center_frame, text="/").grid(column=4, row=0)
+        self.un_entry = ttk.Entry(self.center_frame, width=2).grid(column=5, row=0)
+        self.search = ttk.Button(self.center_frame, text="Search").grid(column=0, row=4, columnspan=6)
         print('Booking pressed')
 
     def service_press(self):
         self.clear_center()
-        self.food = ttk.Button(self.center_frame, text="Food Kiosk").grid(column=0, row=0)
-        self.room_service = ttk.Button(self.center_frame, text="Room Service").grid(column=0, row=0)
+        self.food = ttk.Button(self.center_frame, text="Food Kiosk").grid(column=0, row=0, ipadx=30, ipady=70)
+        self.room_service = ttk.Button(self.center_frame, text="Room Service").grid(column=1, row=0, ipadx=30, ipady=70)
         print('Services pressed')
 
 

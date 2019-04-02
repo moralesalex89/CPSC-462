@@ -5,7 +5,7 @@ from OceanLuxuryGUI import OceanLuxuryGUI
 
 def main():
     root = Tk()
-    app = CustomerUI(root)
+    app = OceanLuxuryGUI(root)
     root.mainloop()
 
 

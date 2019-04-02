@@ -1,9 +1,14 @@
 from tkinter import *
 from tkinter import ttk
+from User import User
+from UserManager import *
+from CustomerUI import CustomerUI
 
 
 class OceanLuxuryGUI:
     def __init__(self, master):
+        self.activeUser = User(-1, -1, "")
+
         self.img_00 = PhotoImage(file='OL-Assets/OceanLuxuryBanner.png')
         self.img_01 = PhotoImage(file='OL-Assets/home.png')
         self.img_02 = PhotoImage(file='OL-Assets/aboutus.png')
@@ -29,11 +34,13 @@ class OceanLuxuryGUI:
         self.message_frame = ttk.Frame(self.main_frame)
         self.backup_frame = ttk.Frame(self.main_frame)
 
+        self.UI_Controller = CustomerUI(self)
+
         # sidebar buttons displayed on the side, used for navigation
-        self.home = ttk.Button(self.sidebar_frame, text="Home", image=self.img_01)
-        self.about = ttk.Button(self.sidebar_frame, text="About Us", image=self.img_02)
-        self.booking = ttk.Button(self.sidebar_frame, text="Booking", image=self.img_03)
-        self.services = ttk.Button(self.sidebar_frame, text="Services", image=self.img_04)
+        self.home = ttk.Button(self.sidebar_frame, text="Home", image=self.img_01, command=self.UI_Controller.home_press)
+        self.about = ttk.Button(self.sidebar_frame, text="About Us", image=self.img_02, command=self.UI_Controller.about_press)
+        self.booking = ttk.Button(self.sidebar_frame, text="Booking", image=self.img_03, command=self.UI_Controller.booking_press)
+        self.services = ttk.Button(self.sidebar_frame, text="Services", image=self.img_04, command=self.UI_Controller.services_press)
         self.login = ttk.Button(self.sidebar_frame, text="Log-in", image=self.img_05)
         self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06)
         self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07)
@@ -102,6 +109,9 @@ class OceanLuxuryGUI:
     def get_backup_frame(self):
         return self.backup_frame
 
+    def get_message_frame(self):
+        return self.message_frame
+
     def display_center_frame(self):
         self.backup_frame.grid_forget()
         self.center_frame.grid()
@@ -109,3 +119,9 @@ class OceanLuxuryGUI:
     def display_backup_frame(self):
         self.center_frame.grid_forget()
         self.backup_frame.grid()
+
+    def loginUser(self, u_name, password):
+        return 1
+
+    def logoutUser(self):
+        return 1

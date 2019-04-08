@@ -1,15 +1,4 @@
-from includes.DatabaseConfig import DBInfo
-import mysql.connector
-
-dbLogin = DBInfo()
-
-# Used to prevent db login info from leaking onto Github
-db = mysql.connector.connect(
-	host=dbLogin.dbHost,
-	user=dbLogin.dbUser,
-	passwd=dbLogin.dbPass,
-	database=dbLogin.dbDatabase
-)
+from includes.DatabaseConfig import db
 
 
 def db_query(query):

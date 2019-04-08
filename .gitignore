@@ -1,0 +1,8 @@
+# Ignore sensitive information for DB connection
+**/includes/DatabaseConfig.py
+
+# Ignore pycharm files
+.idea
+
+$ Ignore pycache
+__pycache__/

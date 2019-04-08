@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from User import User
-from UserManager import *
+# from UserManager import *
 from CustomerUI import CustomerUI
 
 

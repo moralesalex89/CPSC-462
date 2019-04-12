@@ -3,7 +3,7 @@ from tkinter import ttk
 from User import User
 
 
-class CustomerUI:
+class FrontDeskUI:
     def __init__(self, UI_Controller):
         self.UI = UI_Controller
         self.defont = UI_Controller.defont
@@ -15,12 +15,12 @@ class CustomerUI:
     # ____________________HOME____________________
     def home_press(self):
         self.clear_frames()
-        self.Label = ttk.Label(self.center, text="Hello World").grid()
+        self.Label = ttk.Label(self.center, text="Welcome Employee").grid()
 
     # ____________________ABOUT____________________
     def about_press(self):
         self.clear_frames()
-        ttk.Label(self.center, text="You are in CustomerUI").grid()
+        ttk.Label(self.center, text="You are in FrontDeskUI").grid()
 
     # ____________________BOOKING____________________
     def booking_press(self):

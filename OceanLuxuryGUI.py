@@ -1,12 +1,14 @@
 from tkinter import *
 from tkinter import ttk
 from User import User
-# from UserManager import *
+from UserManager import *
 from CustomerUI import CustomerUI
+from FrontDeskUI import FrontDeskUI
 
 
 class OceanLuxuryGUI:
     def __init__(self, master):
+        self.defont = ("TkDefaultFont", 12)
         self.activeUser = User(-1, -1, "")
 
         self.img_00 = PhotoImage(file='OL-Assets/OceanLuxuryBanner.png')
@@ -37,11 +39,11 @@ class OceanLuxuryGUI:
         self.UI_Controller = CustomerUI(self)
 
         # sidebar buttons displayed on the side, used for navigation
-        self.home = ttk.Button(self.sidebar_frame, text="Home", image=self.img_01, command=self.UI_Controller.home_press)
-        self.about = ttk.Button(self.sidebar_frame, text="About Us", image=self.img_02, command=self.UI_Controller.about_press)
-        self.booking = ttk.Button(self.sidebar_frame, text="Booking", image=self.img_03, command=self.UI_Controller.booking_press)
-        self.services = ttk.Button(self.sidebar_frame, text="Services", image=self.img_04, command=self.UI_Controller.services_press)
-        self.login = ttk.Button(self.sidebar_frame, text="Log-in", image=self.img_05)
+        self.home = ttk.Button(self.sidebar_frame, text="Home", image=self.img_01)
+        self.about = ttk.Button(self.sidebar_frame, text="About Us", image=self.img_02)
+        self.booking = ttk.Button(self.sidebar_frame, text="Booking", image=self.img_03)
+        self.services = ttk.Button(self.sidebar_frame, text="Services", image=self.img_04)
+        self.login = ttk.Button(self.sidebar_frame, text="Log-in", image=self.img_05, command=self.login_press)
         self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06)
         self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07)
 
@@ -92,6 +94,10 @@ class OceanLuxuryGUI:
     # layout : 0 / default = logout not displayed
     # layout : 1 = login/signup not displayed
     def set_sidebar_frame(self, layout):
+        self.home.config(command=self.UI_Controller.home_press)
+        self.about.config(command=self.UI_Controller.about_press)
+        self.booking.config(command=self.UI_Controller.booking_press)
+        self.services.config(command=self.UI_Controller.services_press)
 
         if layout == 1:
             self.logout.grid()
@@ -120,8 +126,40 @@ class OceanLuxuryGUI:
         self.center_frame.grid_forget()
         self.backup_frame.grid()
 
+    def make_form(self, frame, name, col, row, width=20):
+        ttk.Label(frame, text=name, font=self.defont).grid(column=col, row=row)
+        value = ttk.Entry(frame, width=width, font=self.defont)
+        value.grid(column=col+1, row=row)
+        return value
+
+    def login_press(self):
+        self.clear_center()
+        username = self.make_form(self.center_frame, "Username: ", 0, 0)
+        password = self.make_form(self.center_frame, "Password: ", 0, 1)
+        logBtn = ttk.Button(self.center_frame, text="Login", command=lambda: self.loginUser(username.get(), password.get()))
+        logBtn.grid(column=0, row=2, columnspan=2)
+
     def loginUser(self, u_name, password):
-        return 1
+        usr = authenticate(u_name, password)
+
+        if usr.get_userType() == "Guest":
+            self.UI_Controller = CustomerUI(self)
+            self.UI_Controller.home_press()
+            self.display_message_frame("Logged in as a Guest")
+            self.activeUser = usr
+            self.set_sidebar_frame(1)
+
+        else:
+            if usr.get_userType() == "Employee":
+                self.UI_Controller = FrontDeskUI(self)
+                self.UI_Controller.home_press()
+                self.display_message_frame("Logged in as an Employee")
+                self.activeUser = usr
+                self.set_sidebar_frame(1)
+
+            else:
+                self.display_message_frame("Invalid username and/or password used, please try again!")
+
 
     def logoutUser(self):
         return 1

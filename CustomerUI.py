@@ -25,6 +25,8 @@ class CustomerUI:
     # ____________________BOOKING____________________
     def booking_press(self):
         self.clear_frames()
+        ttk.Label(self.center, text="Start date").place(width=400,height=400)
+
 
     # ____________________SERVICES____________________
     def services_press(self):

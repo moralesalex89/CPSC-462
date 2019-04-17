@@ -52,7 +52,7 @@ class OceanLuxuryGUI:
     # places all tkinter objects on the screen in their default settings
     # used for initialization
     def display_default(self):
-        self.banner.grid(column=0, row=0, columnspan=2, sticky=W)
+        self.banner.grid(column=0, row=0, columnspan=3, sticky=W)
         self.sidebar_frame.grid(column=0, row=1, sticky=W)
         self.main_frame.grid(column=1, row=1)
         self.center_frame.grid()

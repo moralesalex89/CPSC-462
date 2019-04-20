@@ -126,16 +126,16 @@ class OceanLuxuryGUI:
         self.center_frame.grid_forget()
         self.backup_frame.grid()
 
-    def make_form(self, frame, name, col, row, width=20):
+    def make_form(self, frame, name, col, row,shw=None, width=20):
         ttk.Label(frame, text=name, font=self.defont).grid(column=col, row=row)
-        value = ttk.Entry(frame, width=width, font=self.defont)
+        value = ttk.Entry(frame, width=width, font=self.defont,show=shw)
         value.grid(column=col+1, row=row)
         return value
 
     def login_press(self):
         self.clear_center()
         username = self.make_form(self.center_frame, "Username: ", 0, 0)
-        password = self.make_form(self.center_frame, "Password: ", 0, 1)
+        password = self.make_form(self.center_frame, "Password: ", 0, 1,shw='*')
         logBtn = ttk.Button(self.center_frame, text="Login", command=lambda: self.loginUser(username.get(), password.get()))
         logBtn.grid(column=0, row=2, columnspan=2)
 

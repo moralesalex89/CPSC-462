@@ -5,7 +5,6 @@ from UserManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
 
-
 class OceanLuxuryGUI:
     def __init__(self, master):
         self.defont = ("TkDefaultFont", 12)

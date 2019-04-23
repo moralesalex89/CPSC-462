@@ -71,16 +71,25 @@ class CustomerUI:
     def room_selection(self):
         self.room_select = IntVar()
         self.room_select.set(-1)
-        ttk.Radiobutton(self.center,variable=self.room_select,value = 1,image=self.img_1bed).grid(row=4,column=0,columnspan=4)
-        ttk.Radiobutton(self.center,variable=self.room_select,value = 2,image=self.img_2bed).grid(row=5,column=0,columnspan=4)
-        ttk.Radiobutton(self.center,variable=self.room_select,value = 3,image=self.img_suite).grid(row=6,column=0,columnspan=4)
-        ttk.Label(self.center,text="$359.20/night",font=20).grid(row=4,column=4)
-        ttk.Label(self.center,text="$383.20/night",font=20).grid(row=5,column=4)
-        ttk.Label(self.center,text="$849.00/night",font=20).grid(row=6,column=4)
+        self.single = self.double = self.suite = False
+        for room in self.available_rooms:
+            if 'single' in room:
+                self.single = room
+            if 'double' in room:
+                self.double = room
+            if 'suite' in room:
+                self.suite = room
+        if self.single:    
+            ttk.Radiobutton(self.center,variable=self.room_select,value = 1,image=self.img_1bed).grid(row=4,column=0,columnspan=4)
+            ttk.Label(self.center,text="$359.20/night",font=20).grid(row=4,column=4)
+        if self.double:
+            ttk.Radiobutton(self.center,variable=self.room_select,value = 2,image=self.img_2bed).grid(row=5,column=0,columnspan=4)
+            ttk.Label(self.center,text="$383.20/night",font=20).grid(row=5,column=4)
+        if self.suite:
+            ttk.Radiobutton(self.center,variable=self.room_select,value = 3,image=self.img_suite).grid(row=6,column=0,columnspan=4)
+            ttk.Label(self.center,text="$849.00/night",font=20).grid(row=6,column=4)
         ttk.Button(self.center,text="Reserve",command=self.reserve,width=10).grid(row=7,column=1,columnspan=3)
 
-    def booking_payment(self):
-        pass
     # ____________________SERVICES____________________
     def services_press(self):
         self.clear_frames()
@@ -121,13 +130,25 @@ class CustomerUI:
         if startDate < today or startDate > endDate or endDate.year > today.year+1:
             self.UI.display_message_frame("Date is incorrectly formatted")
             return False
-  
+        self.available_rooms = check_reservations(startDate,endDate)
+        self.startDate = startDate
+        self.endDate = endDate
         self.room_selection()
 
     def reserve(self):
         print(self.room_select.get())
-        if self.room_select.get() == -1:
+        id = 11
+        choice = self.room_select.get()
+        room_id = -1
+        if choice == -1:
             self.UI.display_message_frame("No room type selected")
             return
-        self.booking_payment()
+        elif choice == 1:
+            room_id = self.single[0]
+        elif choice == 2:
+            room_id = self.double[0]
+        elif choice == 3:
+            room_id = self.suite[0]
+            
+        create_reservation(self.startDate,self.endDate,id,room_id)
         

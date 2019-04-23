@@ -9,8 +9,9 @@ def db_query(query):
 
 def check_reservations(start,end):
 	db_cursor = db.cursor()
-	db_cursor.execute("SELECT room_id FROM Reservations WHERE (startTime >= '%s') AND (endTime <= '%s')")
-	return db_cursor
+	query = "SELECT room_id,room_type FROM Rooms Ro WHERE Ro.room_id NOT IN (SELECT room_id FROM Reservations WHERE ((startTime >= '%s') OR (endTime >= '%s')))" %(start,end)
+	db_cursor.execute(query)
+	return list(db_cursor)
 
 def create_reservation(start,end,userId,roomNum):
 	db_cursor = db.cursor()

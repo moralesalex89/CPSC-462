@@ -9,7 +9,7 @@ class OceanLuxuryGUI:
     def __init__(self, master):
         self.defont = ("TkDefaultFont", 12)
         self.activeUser = User(-1, -1, "")
-
+        
         self.img_00 = PhotoImage(file='OL-Assets/OceanLuxuryBanner.png')
         self.img_01 = PhotoImage(file='OL-Assets/home.png')
         self.img_02 = PhotoImage(file='OL-Assets/aboutus.png')

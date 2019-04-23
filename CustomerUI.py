@@ -1,10 +1,12 @@
 from tkinter import *
 from tkinter import ttk
 from User import User
+from includes.DatabaseFunctions import create_reservation, check_reservations
 import datetime
 
 #Creates entry field to recieve valid dates
 class date_entry:
+    prev = ''
     def __init__(self,frame,rowpos,colpos,colspan):
         self.var = StringVar()
         self.var.trace('w',self.validate_length)
@@ -13,14 +15,20 @@ class date_entry:
         self.Entry.grid(row=rowpos,column=colpos,columnspan=colspan)
         self.Entry.bind('<FocusIn>',self.reservation_entry)
         self.Entry.bind('<FocusOut>',self.reservation_leave)
+        self.prev = ''
     def validate_length(self, *args):
         maxsize = 8
         temp = self.var.get()
         if len(temp) > maxsize:
             self.var.set(temp[:maxsize])
-        if len(temp) == 2 or len(temp)==5:
+        if len(temp) < len(self.prev):
+            if len(temp) == 2 or len(temp) == 5:
+                self.var.set(temp[:len(self.prev)-2])
+        elif len(temp) == 2 or len(temp) == 5:
             self.Entry.insert(INSERT,'/')
             self.Entry.icursor("end")
+        self.prev = self.var.get()
+
     def reservation_entry(self, event):
         if self.Entry.get() == 'MM/DD/YY':
             self.Entry.delete(0,"end")
@@ -50,7 +58,6 @@ class CustomerUI:
     def about_press(self):
         self.clear_frames()
         ttk.Label(self.center, text="You are in CustomerUI").grid()
-
 
     # ____________________BOOKING____________________
     def booking_press(self):
@@ -116,9 +123,6 @@ class CustomerUI:
             return False
   
         self.room_selection()
-
-   
-
 
     def reserve(self):
         print(self.room_select.get())

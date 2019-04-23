@@ -15,6 +15,9 @@ def check_reservations(start,end):
 
 def create_reservation(start,end,userId,roomNum):
 	db_cursor = db.cursor()
+	check = check_reservations(start,end)
+	if check == None:
+		return False
 	query = "INSERT INTO Reservations (startTime,EndTime,user_id,room_id) VALUES ('%s','%s','%d','%d')" % (start,end,userId,roomNum)
 	db_cursor.execute(query)
 	db.commit()

@@ -7,15 +7,17 @@ import datetime
 #Creates entry field to recieve valid dates
 class date_entry:
     prev = ''
-    def __init__(self,frame,rowpos,colpos,colspan):
+    def __init__(self,frame,rowpos,colpos,colspan,text=''):
         self.var = StringVar()
         self.var.trace('w',self.validate_length)
         self.Entry = ttk.Entry(frame,width=11,textvariable=self.var)
-        self.Entry.insert(0,'MM/DD/YY')
+        self.Entry.insert(0,text)
+        if text == '':
+            self.Entry.insert(0,'MM/DD/YY')
         self.Entry.grid(row=rowpos,column=colpos,columnspan=colspan)
         self.Entry.bind('<FocusIn>',self.reservation_entry)
         self.Entry.bind('<FocusOut>',self.reservation_leave)
-        self.prev = ''
+        self.prev = text
     def validate_length(self, *args):
         maxsize = 8
         temp = self.var.get()
@@ -69,6 +71,13 @@ class CustomerUI:
         ttk.Button(self.center,text="Search", command=self.validate_dates,width=10).grid(row=3,column=1,columnspan = 3,pady=5)
         
     def room_selection(self):
+        self.clear_frames()
+        ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)
+        ttk.Label(self.center, text="End date").grid(column=3,row=0,columnspan=1)
+        self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1,text=self.sDate.prev)
+        self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1,text=self.eDate.prev)
+        ttk.Button(self.center,text="Search", command=self.validate_dates,width=10).grid(row=3,column=1,columnspan = 3,pady=5)
+
         self.room_select = IntVar()
         self.room_select.set(-1)
         self.single = self.double = self.suite = False
@@ -79,7 +88,7 @@ class CustomerUI:
                 self.double = room
             if 'suite' in room:
                 self.suite = room
-        if self.single:    
+        if self.single:
             ttk.Radiobutton(self.center,variable=self.room_select,value = 1,image=self.img_1bed).grid(row=4,column=0,columnspan=4)
             ttk.Label(self.center,text="$359.20/night",font=20).grid(row=4,column=4)
         if self.double:
@@ -88,7 +97,8 @@ class CustomerUI:
         if self.suite:
             ttk.Radiobutton(self.center,variable=self.room_select,value = 3,image=self.img_suite).grid(row=6,column=0,columnspan=4)
             ttk.Label(self.center,text="$849.00/night",font=20).grid(row=6,column=4)
-        ttk.Button(self.center,text="Reserve",command=self.reserve,width=10).grid(row=7,column=1,columnspan=3)
+        ttk.Button(self.center,text="Reserve",command=self.reserve,width=10).grid(row=7,column=0,columnspan=2)
+        ttk.Button(self.center,text="Cancel",command=self.booking_press,width=10).grid(row=7,column=2,columnspan=2)
 
     # ____________________SERVICES____________________
     def services_press(self):
@@ -115,7 +125,6 @@ class CustomerUI:
     # -Dates given are later than present date
     #If valid it will display all available room types
     def validate_dates(self):
-        print("Verifying dates")
         try:
             startDate = datetime.datetime.strptime(str(self.sDate.Entry.get()),'%m/%d/%y')
             endDate = datetime.datetime.strptime(str(self.eDate.Entry.get()),'%m/%d/%y')
@@ -124,9 +133,6 @@ class CustomerUI:
             return False
         today = datetime.date.today()
         today = datetime.datetime(today.year,today.month,today.day)
-        print("Present:\t"+ str(today))
-        print("Start:\t"+ str(startDate))
-        print("End:\t"+ str(endDate))
         if startDate < today or startDate > endDate or endDate.year > today.year+1:
             self.UI.display_message_frame("Date is incorrectly formatted")
             return False
@@ -150,5 +156,7 @@ class CustomerUI:
         elif choice == 3:
             room_id = self.suite[0]
             
-        create_reservation(self.startDate,self.endDate,id,room_id)
-        
+        if create_reservation(self.startDate,self.endDate,id,room_id) == True:
+            self.UI.display_message_frame("Reservation made for %s - %s" % (self.startDate,self.endDate))
+        else:
+            self.UI.display_message_frame("Room Taken")

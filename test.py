@@ -1,7 +1,7 @@
 from includes.DatabaseFunctions import db_query,create_reservation,check_reservations
 #var = check_reservations('2019-05-22','2019-05-23')
 #create_reservation('2019-05-22','2019-05-23',11,6)
-query = "Select * from Rooms"
+query = "describe Users"
 var = db_query(query)
 print(var)
 for x in var:

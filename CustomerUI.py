@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from User import User
-from includes.DatabaseFunctions import create_reservation, check_reservations
+from reservationManager import resManager
 import datetime
 
 #Creates entry field to recieve valid dates
@@ -48,6 +48,7 @@ class CustomerUI:
         self.backup = UI_Controller.get_backup_frame()
         self.message = UI_Controller.get_message_frame()
         self.activeUser = UI_Controller.activeUser
+        self.resMan = resManager
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')
@@ -64,6 +65,9 @@ class CustomerUI:
     # ____________________BOOKING____________________
     def booking_press(self):
         self.clear_frames()
+        if self.activeUser.get_userID() == -1:
+            ttk.Label(self.center,text="Please log in to reserve a room",font=24).grid()
+            return
         self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1)
         self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1)
         ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)
@@ -97,8 +101,15 @@ class CustomerUI:
         if self.suite:
             ttk.Radiobutton(self.center,variable=self.room_select,value = 3,image=self.img_suite).grid(row=6,column=0,columnspan=4)
             ttk.Label(self.center,text="$849.00/night",font=20).grid(row=6,column=4)
-        ttk.Button(self.center,text="Reserve",command=self.reserve,width=10).grid(row=7,column=0,columnspan=2)
+        ttk.Button(self.center,text="Reserve",command=self.reserveCheck,width=10).grid(row=7,column=0,columnspan=2)
         ttk.Button(self.center,text="Cancel",command=self.booking_press,width=10).grid(row=7,column=2,columnspan=2)
+    def pay_pop(self):
+        self.pop = Toplevel()
+        self.pop.title("Pay for your reservation")
+        msg = "Reserve: %s\nFrom:%s\nTo: %s\nFor: $%s/night" % (self.roomType,self.startDate,self.endDate,self.price)
+        ttk.Label(self.pop,text=msg).grid(row=0,column=1)
+        ttk.Button(self.pop,text="Pay",command=self.reserve).grid(row=1,column=0,padx=20,columnspan=2)
+        ttk.Button(self.pop,text="Cancel",command=self.pop.destroy).grid(row=1,column=2)
 
     # ____________________SERVICES____________________
     def services_press(self):
@@ -136,27 +147,34 @@ class CustomerUI:
         if startDate < today or startDate > endDate or endDate.year > today.year+1:
             self.UI.display_message_frame("Date is incorrectly formatted")
             return False
-        self.available_rooms = check_reservations(startDate,endDate)
+        self.available_rooms = self.resMan.checkReservations(self.resMan,startDate,endDate)
         self.startDate = startDate
         self.endDate = endDate
         self.room_selection()
 
-    def reserve(self):
-        print(self.room_select.get())
-        id = 11
+    def reserveCheck(self):
         choice = self.room_select.get()
-        room_id = -1
+        self.room_id = -1
         if choice == -1:
             self.UI.display_message_frame("No room type selected")
             return
         elif choice == 1:
-            room_id = self.single[0]
+            self.room_id = self.single[0]
+            self.roomType = self.single[1]
+            self.price = 359.20
         elif choice == 2:
-            room_id = self.double[0]
+            self.room_id = self.double[0]
+            self.roomType = self.double[1]
+            self.price = 383.20
         elif choice == 3:
-            room_id = self.suite[0]
-            
-        if create_reservation(self.startDate,self.endDate,id,room_id) == True:
+            self.room_id = self.suite[0]
+            self.roomType = self.suite[1]
+            self.price = 849.00
+        self.pay_pop()
+        
+    def reserve(self):
+        if self.resMan.createReservation(self.resMan,self.startDate,self.endDate,self.activeUser.get_userID(),self.room_id) == True:
             self.UI.display_message_frame("Reservation made for %s - %s" % (self.startDate,self.endDate))
         else:
             self.UI.display_message_frame("Room Taken")
+        self.pop.destroy()

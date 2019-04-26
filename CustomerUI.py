@@ -37,6 +37,10 @@ class CustomerUI:
 
     def room_maintenance_press(self):
         self.clear_frames()
+#        self.timeslots = HKManager.fetchHKTimes()
+        ttk.Label(self.center, text="Time").grid()
+        ttk.Label(self.center, text="Open Slots").grid()
+        #display stuff
 
     # ____________________OTHER____________________
     def clear_frames(self):

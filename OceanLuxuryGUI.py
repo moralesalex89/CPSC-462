@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from User import User
 from UserManager import *
+from HKManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
 
@@ -18,7 +19,7 @@ class OceanLuxuryGUI:
         self.img_04 = PhotoImage(file='OL-Assets/services.png')
         self.img_05 = PhotoImage(file='OL-Assets/login.png')
         self.img_06 = PhotoImage(file='OL-Assets/signup.png')
-        self.img_07 = PhotoImage(file='OL-Assets/white_button.png')
+        self.img_07 = PhotoImage(file='OL-Assets/logout.png')
 
         # 3 main areas of the screen
         # banner displays the Ocean Luxury logo
@@ -44,15 +45,15 @@ class OceanLuxuryGUI:
         self.booking = ttk.Button(self.sidebar_frame, text="Booking", image=self.img_03)
         self.services = ttk.Button(self.sidebar_frame, text="Services", image=self.img_04)
         self.login = ttk.Button(self.sidebar_frame, text="Log-in", image=self.img_05, command=self.login_press)
-        self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06)
-        self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07)
+        self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06, command=self.signupUser)
+        self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07, command=self.logoutUser)
 
         self.display_default()
 
     # places all tkinter objects on the screen in their default settings
     # used for initialization
     def display_default(self):
-        self.banner.grid(column=0, row=0, columnspan=2, sticky=W)
+        self.banner.grid(column=0, row=0, columnspan=3, sticky=W)
         self.sidebar_frame.grid(column=0, row=1, sticky=W)
         self.main_frame.grid(column=1, row=1)
         self.center_frame.grid()
@@ -160,6 +161,44 @@ class OceanLuxuryGUI:
             else:
                 self.display_message_frame("Invalid username and/or password used, please try again!")
 
-
     def logoutUser(self):
-        return 1
+        self.UI_Controller = CustomerUI(self)
+        self.activeUser = User(-1, -1, "")
+        self.set_sidebar_frame(0)
+        self.UI_Controller.home_press()
+
+    def signupValidate(self, username, password, pass_check):
+        error = ""
+
+        if username == "":
+            error = error + " - No username entry\n"
+
+        else:
+            if (len(username) < 4) or (len(username) > 20):
+                error = error + " - Username invalid, must be 4-20 characters\n"
+
+        if password == "":
+            error = error + " - No password entry\n"
+
+        else:
+            if password != pass_check:
+                error = error + " - Passwords do not match\n"
+
+        if error == "":
+#            if(create_user()):
+                self.UI_Controller.home_press()
+                self.display_message_frame("Your account was created successfully!")
+                self.set_sidebar_frame(1)
+
+#            else:
+#                error = error + " - Username already exists, please select a different username\n"
+
+        if error != "":
+            self.display_message_frame(error)
+
+    def signupUser(self):
+        self.clear_center()
+        username = self.make_form(self.center_frame, "Username: ", 0, 0)
+        password = self.make_form(self.center_frame, "Password: ", 0, 1)
+        pass_check = self.make_form(self.center_frame, "Re-enter Password: ", 0, 2)
+        ttk.Button(self.center_frame, text="Sign-Up", command=lambda: self.signupValidate(username.get(), password.get(), pass_check.get())).grid(columnspan=2)

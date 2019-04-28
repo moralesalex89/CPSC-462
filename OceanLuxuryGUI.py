@@ -5,12 +5,11 @@ from UserManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
 
-
 class OceanLuxuryGUI:
     def __init__(self, master):
         self.defont = ("TkDefaultFont", 12)
         self.activeUser = User(-1, -1, "")
-
+        
         self.img_00 = PhotoImage(file='OL-Assets/OceanLuxuryBanner.png')
         self.img_01 = PhotoImage(file='OL-Assets/home.png')
         self.img_02 = PhotoImage(file='OL-Assets/aboutus.png')
@@ -52,7 +51,7 @@ class OceanLuxuryGUI:
     # places all tkinter objects on the screen in their default settings
     # used for initialization
     def display_default(self):
-        self.banner.grid(column=0, row=0, columnspan=2, sticky=W)
+        self.banner.grid(column=0, row=0, columnspan=3, sticky=W)
         self.sidebar_frame.grid(column=0, row=1, sticky=W)
         self.main_frame.grid(column=1, row=1)
         self.center_frame.grid()
@@ -126,16 +125,16 @@ class OceanLuxuryGUI:
         self.center_frame.grid_forget()
         self.backup_frame.grid()
 
-    def make_form(self, frame, name, col, row, width=20):
+    def make_form(self, frame, name, col, row,shw=None, width=20):
         ttk.Label(frame, text=name, font=self.defont).grid(column=col, row=row)
-        value = ttk.Entry(frame, width=width, font=self.defont)
+        value = ttk.Entry(frame, width=width, font=self.defont,show=shw)
         value.grid(column=col+1, row=row)
         return value
 
     def login_press(self):
         self.clear_center()
         username = self.make_form(self.center_frame, "Username: ", 0, 0)
-        password = self.make_form(self.center_frame, "Password: ", 0, 1)
+        password = self.make_form(self.center_frame, "Password: ", 0, 1,shw='*')
         logBtn = ttk.Button(self.center_frame, text="Login", command=lambda: self.loginUser(username.get(), password.get()))
         logBtn.grid(column=0, row=2, columnspan=2)
 

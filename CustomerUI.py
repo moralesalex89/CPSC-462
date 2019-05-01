@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from User import User
+from HKManager import *
 
 
 class CustomerUI:
@@ -37,10 +38,13 @@ class CustomerUI:
 
     def room_maintenance_press(self):
         self.clear_frames()
-#        self.timeslots = HKManager.fetchHKTimes()
-        ttk.Label(self.center, text="Time").grid()
-        ttk.Label(self.center, text="Open Slots").grid()
-        #display stuff
+        ttk.Label(self.center, text="Time").grid(column=0, row=0)
+        ttk.Label(self.center, text="Open Slots").grid(column=1, row=0)
+        times = fetchTimes()
+        timeSlots = fetchHousekeepingSlots()
+        for time_range in len(times):
+            ttk.Label(self.center, text=times[time_range]).grid(column=0, row=time_range)
+            ttk.Label(self.center, text=timeSlots[time_range]).grid(column=1, row=time_range)
 
     # ____________________OTHER____________________
     def clear_frames(self):

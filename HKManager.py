@@ -1,27 +1,48 @@
-from includes.DatabaseFunctions import db_query
+from includes.DatabaseFunctions import *
+
+HK_PER_HOUR = 6
 
 
-def fetchHousekeepingSlots(times):
+def fetchTimes():
+    times = ["08:00a", "08:30a", "09:00a", "09:30a", "10:00a", "10:30a", "11:00a", "11:30a", "12:00a", "12:30a", "01:00p", "01:30p", "02:00p", "02:30p", "03:00p", "03:30p", "04:00p", "04:30p", "05:00p"]
+    return times
+
+
+def fetchHousekeepingSlots():
+    times = fetchTimes()
     slots = []
-    for i in range(28):
-        query = "SELECT COUNT(hk_id) FROM Housekeeping WHERE time = '%s' AND room = NULL" % times[i]
+    for time in times:
+        query = "SELECT COUNT(*) FROM Housekeeping WHERE startTime = '%s' AND room_id = NULL" % time
         result = db_query(query).fetchone()
-        slots.append(result)
+        if result is None:
+            slots.append(0)
+        else:
+            slots.append(result)
     return slots
 
 
 def addHousekeepingEntry(room_num, time):
-    query = "SELECT hk_id FROM Housekeeping WHERE time = '%s' AND room = NULL" % time
+    query = "SELECT hk_id FROM Housekeeping WHERE startTime = '%s' AND room_id = NULL" % time
     result = db_query(query).fetchone()
-    if not result[0]:
-        query = "UPDATE Housekeeping SET room = " + room_num + " WHERE hk_id = result"
-        result = db_query(query).fetchone()
-        return not result[0]
+    if result is not None:
+        query = "UPDATE Housekeeping SET room_id = %d WHERE (hk_id = '%d' AND room_id = NULL)" % room_num, result[0]
+        db_query(query).fetchone()
+        db.commit()
+        return True
     else:
         return False
 
-#def removeHousekeepingEntry(room, time):
 
-#def clearHousekeeping():
+def removeHousekeepingEntry(room_num):
+    query = "UPDATE Housekeeping SET room = NULL WHERE room_id = %d" % room_num
+    db_query(query)
 
-#def initHousekeeping():
+
+def clearHousekeeping():
+    times = fetchTimes()
+
+    for time_slot in times:
+        for entry_num in range(HK_PER_HOUR):
+            query = "UPDATE Housekeeping (room_id) VALUES (NULL)"
+            db_query(query)
+            db.commit()

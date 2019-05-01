@@ -4,7 +4,7 @@ import bcrypt
 
 def db_query(query):
 	# Basic handling of database queries
-	db_cursor = db.cursor()
+	db_cursor = db.cursor(buffered=True)
 	db_cursor.execute(query)
 	return db_cursor
 

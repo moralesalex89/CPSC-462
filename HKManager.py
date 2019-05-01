@@ -12,12 +12,14 @@ def fetchHousekeepingSlots():
     times = fetchTimes()
     slots = []
     for time in times:
-        query = "SELECT COUNT(*) FROM Housekeeping WHERE startTime = '%s' AND room_id = NULL" % time
-        result = db_query(query).fetchone()
+        query = "SELECT COUNT(*) FROM Housekeeping WHERE startTime = '%s' AND room_id is NULL" % time
+        print(query)
+        result = db_query(query).fetchall()
         if result is None:
             slots.append(0)
         else:
             slots.append(result)
+        print(slots)
     return slots
 
 

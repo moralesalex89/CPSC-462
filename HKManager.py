@@ -23,15 +23,15 @@ def fetchHousekeepingSlots():
 def addHousekeepingEntry(room_num, time):
     query = "SELECT hk_id FROM Housekeeping WHERE startTime = '%s' AND room_id is NULL" % time
     result = db_query(query).fetchone()
-    if result is not None:
+    if result is None:
+        return False
+    else:
         query = "UPDATE Housekeeping SET room_id = %d WHERE (hk_id = %d AND room_id is NULL)" % (room_num, result[0])
         db_query(query)
-        query = "UPDATE Housekeeping SET room_id = NULL WHERE (hk_id != %d and room_id is %d)" % (result[0], room_num)
+        query = "UPDATE Housekeeping SET room_id = NULL WHERE (hk_id != %d and room_id = %d)" % (result[0], room_num)
         db_query(query)
         db.commit()
         return True
-    else:
-        return False
 
 
 def removeHousekeepingEntry(room_num):

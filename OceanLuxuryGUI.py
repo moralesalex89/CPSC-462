@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 from User import User
 from UserManager import *
-from HKManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
 

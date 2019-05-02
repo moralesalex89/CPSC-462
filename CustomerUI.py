@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from User import User
 from HKManager import *
+from RoomManager import *
 
 
 class CustomerUI:
@@ -36,27 +37,36 @@ class CustomerUI:
     def food_service_press(self):
         self.clear_frames()
 
+    def add_hk(self, room_num, time):
+        if addHousekeepingEntry(int(room_num), time):
+            self.room_maintenance_press()
+            self.UI.display_message_frame("Housekeeping scheduled successfully")
+        else:
+            self.room_maintenance_press()
+            self.UI.display_message_frame("Housekeeping scheduling failed")
+
     def room_maintenance_press(self):
         self.clear_frames()
-        ttk.Label(self.center, text="Time").grid(column=0, row=0)
-        ttk.Label(self.center, text="Open Slots").grid(column=1, row=0, columnspan=2)
+        ttk.Label(self.center, font=self.defont, text="Time").grid(column=0, row=0)
+        ttk.Label(self.center, font=self.defont, text="Open Slots").grid(column=1, row=0)
         times = fetchTimes()
         timeSlots = fetchHousekeepingSlots()
         open_times = []
+        len_times = len(times)
 
-        for time_range in range(len(times)):
-            ttk.Label(self.center, text=times[time_range]).grid(column=0, row=time_range+1)
-            ttk.Label(self.center, text=timeSlots[time_range]).grid(column=1, row=time_range+1)
+        for time_range in range(len_times):
+            ttk.Label(self.center, font=self.defont, text=times[time_range]).grid(column=0, row=time_range+1)
+            ttk.Label(self.center, font=self.defont, text=timeSlots[time_range]).grid(column=1, row=time_range+1)
             if timeSlots[time_range] > 0:
                 open_times.append(times[time_range])
 
         if len(open_times) > 0:
             option = StringVar(self.center)
-            time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=0, row=len(times)+1, columnspan=3)
-            ttk.Button(self.center, text="Request Housekeeping").grid(column=0, row=len(times)+2, columnspan=3)
+            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+1)
+            time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+1)
+            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(getRoomID(self.activeUser), option.get())).grid(column=0, row=len_times+2, columnspan=2)
         else:
-            ttk.Label(self.center, text="All housekeeping hours are currently booked").grid(column=0, row=len(times)+1, columnspan=3)
-
+            ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+1, columnspan=2)
 
     # ____________________OTHER____________________
     def clear_frames(self):

@@ -66,13 +66,17 @@ class CustomerUI:
     def booking_press(self):
         self.clear_frames()
         if self.activeUser.get_userID() == -1:
-            ttk.Label(self.center,text="Please log in to reserve a room",font=24).grid()
+            ttk.Label(self.center,text="Please log in to reserve a room",font=24,).grid()
             return
-        self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1)
-        self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1)
-        ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)
-        ttk.Label(self.center, text="End date").grid(column=3,row=0,columnspan=1)
-        ttk.Button(self.center,text="Search", command=self.validate_dates,width=10).grid(row=3,column=1,columnspan = 3,pady=5)
+        try:
+            msg = "Reserve: %s\nFrom:%s\nTo: %s\nFor: $%s/night" % (self.roomType,self.startDate,self.endDate,self.price)
+            ttk.Label(self.center,text=msg).grid(row=0,columnspan=3)
+        except:
+            self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1)
+            self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1)
+            ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)
+            ttk.Label(self.center, text="End date").grid(column=3,row=0,columnspan=1)
+            ttk.Button(self.center,text="Search", command=self.validate_dates,width=10).grid(row=3,column=1,columnspan = 3,pady=5)
         
     def room_selection(self):
         self.clear_frames()

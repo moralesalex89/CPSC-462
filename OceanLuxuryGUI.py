@@ -149,7 +149,6 @@ class OceanLuxuryGUI:
             self.UI_Controller = CustomerUI(self)
             self.UI_Controller.home_press()
             self.display_message_frame("Logged in as a Guest")
-            self.activeUser = usr
             self.set_sidebar_frame(1)
 
         else:
@@ -157,7 +156,6 @@ class OceanLuxuryGUI:
                 self.UI_Controller = FrontDeskUI(self)
                 self.UI_Controller.home_press()
                 self.display_message_frame("Logged in as an Employee")
-                self.activeUser = usr
                 self.set_sidebar_frame(1)
 
             else:

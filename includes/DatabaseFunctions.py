@@ -24,7 +24,7 @@ def create_user(username, password, user_type, address):
 def get_id(username):
 	query = "SELECT user_id FROM Users WHERE name = '%s'" % username
 	result = db_query(query).fetchone()
-	return result
+	return result[0]
 	
 def verify_login(username, password):
 	query = "SELECT pass FROM Users WHERE name = '%s'" % username

@@ -212,3 +212,4 @@ class CustomerUI:
         else:
             self.UI.display_message_frame("Room Taken")
         self.pop.destroy()
+        self.home_press()

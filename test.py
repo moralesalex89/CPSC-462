@@ -21,7 +21,3 @@ if verify_login("test", "test2"):
 	print("Login verified")
 else:
 	print("Username and/or password is incorrect")
-from HKManager import *
-
-
-fetchHousekeepingSlots()

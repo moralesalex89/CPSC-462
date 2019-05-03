@@ -4,6 +4,7 @@ from User import User
 from UserManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
+from includes.DatabaseFunctions import create_user, verify_login
 
 class OceanLuxuryGUI:
     def __init__(self, master):
@@ -139,7 +140,7 @@ class OceanLuxuryGUI:
         logBtn.grid(column=0, row=2, columnspan=2)
 
     def loginUser(self, u_name, password):
-        usr = authenticate(u_name, password)
+        usr = verify_login(u_name, password)
 
         if usr.get_userType() == "Guest":
             self.UI_Controller = CustomerUI(self)
@@ -184,9 +185,12 @@ class OceanLuxuryGUI:
 
         if error == "":
 #            if(create_user()):
-                self.UI_Controller.home_press()
-                self.display_message_frame("Your account was created successfully!")
-                self.set_sidebar_frame(1)
+                if create_user(username,password,0,'') == True:
+                    self.UI_Controller.home_press()
+                    self.display_message_frame("Your account was created successfully!")
+                    self.set_sidebar_frame(1)
+                else:
+                    self.display_message_frame("Your account could not be created!")
 
 #            else:
 #                error = error + " - Username already exists, please select a different username\n"

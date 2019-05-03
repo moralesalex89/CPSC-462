@@ -7,6 +7,11 @@ class User:
         self.userID = u_id
         self.userType = u_type
         self.username = u_name
+    
+    def login_user(self,u_name,u_type,u_id):
+        self.userID = u_id
+        self.userType = u_type
+        self.username = u_name
 
     def get_userID(self):
         return self.userID

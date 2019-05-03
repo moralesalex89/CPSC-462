@@ -4,7 +4,7 @@ from User import User
 from UserManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
-from includes.DatabaseFunctions import create_user, verify_login
+from includes.DatabaseFunctions import create_user, verify_login, get_id
 
 class OceanLuxuryGUI:
     def __init__(self, master):
@@ -140,9 +140,12 @@ class OceanLuxuryGUI:
         logBtn.grid(column=0, row=2, columnspan=2)
 
     def loginUser(self, u_name, password):
-        usr = verify_login(u_name, password)
-
-        if usr.get_userType() == "Guest":
+        verify = verify_login(u_name, password)
+        usr = self.activeUser
+        if verify == True:
+            self.activeUser.login_user(u_name,0,get_id(u_name))
+            
+        if usr.get_userType() == 0:
             self.UI_Controller = CustomerUI(self)
             self.UI_Controller.home_press()
             self.display_message_frame("Logged in as a Guest")
@@ -150,7 +153,7 @@ class OceanLuxuryGUI:
             self.set_sidebar_frame(1)
 
         else:
-            if usr.get_userType() == "Employee":
+            if usr.get_userType() == 1:
                 self.UI_Controller = FrontDeskUI(self)
                 self.UI_Controller.home_press()
                 self.display_message_frame("Logged in as an Employee")

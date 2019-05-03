@@ -21,3 +21,6 @@ if verify_login("test", "test2"):
 	print("Login verified")
 else:
 	print("Username and/or password is incorrect")
+
+
+addHousekeepingEntry(3, '04:30p')

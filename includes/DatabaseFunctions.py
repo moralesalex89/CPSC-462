@@ -21,6 +21,15 @@ def create_user(username, password, user_type, address):
 	db.commit()
 	return True
 
+#@return - list of reservation details obtained from a user_id
+def get_reservation(user_id):
+	query = "SELECT * FROM Reservations WHERE user_id = '%d'" % user_id
+	result = list(db_query(query).fetchone())
+	query = "SELECT room_type FROM Rooms WHERE room_id = '%d'" % result[4]
+	result2 = db_query(query).fetchone()
+	result.append(result2[0])
+	return result
+
 def get_id(username):
 	query = "SELECT user_id FROM Users WHERE name = '%s'" % username
 	result = db_query(query).fetchone()

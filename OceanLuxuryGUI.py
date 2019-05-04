@@ -157,7 +157,6 @@ class OceanLuxuryGUI:
                 self.UI_Controller.home_press()
                 self.display_message_frame("Logged in as an Employee")
                 self.set_sidebar_frame(1)
-
             else:
                 self.display_message_frame("Invalid username and/or password used, please try again!")
 
@@ -185,16 +184,13 @@ class OceanLuxuryGUI:
                 error = error + " - Passwords do not match\n"
 
         if error == "":
-#            if(create_user()):
-                if create_user(username,password,0,'') == True:
-                    self.UI_Controller.home_press()
-                    self.display_message_frame("Your account was created successfully!")
-                    self.set_sidebar_frame(1)
-                else:
-                    self.display_message_frame("Your account could not be created!")
 
-#            else:
-#                error = error + " - Username already exists, please select a different username\n"
+            if create_user(username,password,0,'') == True:
+                self.UI_Controller.home_press()
+                self.display_message_frame("Your account was created successfully!")
+                self.set_sidebar_frame(1)
+            else:
+                self.display_message_frame("Your account could not be created!")
 
         if error != "":
             self.display_message_frame(error)

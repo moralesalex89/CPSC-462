@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from includes.DatabaseFunctions import get_id, get_reservation
 
 
 class User:
@@ -12,6 +13,10 @@ class User:
         self.userID = u_id
         self.userType = u_type
         self.username = u_name
+        try:
+            self.reservation = get_reservation(u_id)
+        except:
+            self.reservation = False
 
     def get_userID(self):
         return self.userID
@@ -21,3 +26,6 @@ class User:
 
     def get_username(self):
         return self.username
+
+    def get_reservation(self):
+        return self.reservation

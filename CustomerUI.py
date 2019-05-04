@@ -70,10 +70,11 @@ class CustomerUI:
         if self.activeUser.get_userID() == -1:
             ttk.Label(self.center,text="Please log in to reserve a room",font=24,).grid()
             return
-        try:
-            msg = "Reserve: %s\nFrom:%s\nTo: %s\nFor: $%s/night" % (self.roomType,self.startDate,self.endDate,self.price)
+        reserve = self.activeUser.get_reservation()
+        if reserve:
+            msg = "Reserve: %s\nFrom:%s\nTo: %s\n" % (reserve[5],reserve[1],reserve[2])
             ttk.Label(self.center,text=msg).grid(row=0,columnspan=3)
-        except:
+        else:
             self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1)
             self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1)
             ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)

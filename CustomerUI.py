@@ -212,5 +212,6 @@ class CustomerUI:
             self.UI.display_message_frame("Reservation made for %s - %s" % (self.startDate,self.endDate))
         else:
             self.UI.display_message_frame("Room Taken")
+        self.activeUser.login_user(self.activeUser.get_username(),self.activeUser.get_userType(),self.activeUser.get_userID())
         self.pop.destroy()
         self.home_press()

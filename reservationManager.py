@@ -1,7 +1,7 @@
 from includes.DatabaseConfig import db
 class resManager:
+    
     def checkReservations(self ,startTime,endTime):
-        
         print('s:%s\te:%s'%(startTime,endTime))
         db_cursor = db.cursor()
         query = "SELECT room_id,room_type FROM Rooms Ro WHERE Ro.room_id NOT IN (SELECT room_id FROM Reservations WHERE ((startTime >= '%s') OR (endTime >= '%s')))" %(startTime,endTime)

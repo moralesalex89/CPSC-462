@@ -3,6 +3,8 @@ from tkinter import ttk
 from User import User
 from reservationManager import resManager
 import datetime
+from HKManager import *
+from RoomManager import *
 
 #Creates entry field to recieve valid dates
 class date_entry:
@@ -52,6 +54,7 @@ class CustomerUI:
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')
+
     # ____________________HOME____________________
     def home_press(self):
         self.clear_frames()
@@ -66,12 +69,13 @@ class CustomerUI:
     def booking_press(self):
         self.clear_frames()
         if self.activeUser.get_userID() == -1:
-            ttk.Label(self.center,text="Please log in to reserve a room",font=24,).grid()
+            ttk.Label(self.center,text="Please log in to reserve a room",font=('Arial',24)).grid()
             return
-        try:
-            msg = "Reserve: %s\nFrom:%s\nTo: %s\nFor: $%s/night" % (self.roomType,self.startDate,self.endDate,self.price)
-            ttk.Label(self.center,text=msg).grid(row=0,columnspan=3)
-        except:
+        reserve = self.activeUser.get_reservation()
+        if reserve:
+            msg = "Reserve: %s\nFrom:%s\nTo: %s\n" % (reserve[5],reserve[1],reserve[2])
+            ttk.Label(self.center,text=msg,font=('Arial',24)).grid(row=0,columnspan=3)
+        else:
             self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1)
             self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1)
             ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)
@@ -124,8 +128,36 @@ class CustomerUI:
     def food_service_press(self):
         self.clear_frames()
 
+    def add_hk(self, room_num, time):
+        if addHousekeepingEntry(int(room_num), time):
+            self.room_maintenance_press()
+            self.UI.display_message_frame("Housekeeping scheduled successfully")
+        else:
+            self.room_maintenance_press()
+            self.UI.display_message_frame("Housekeeping scheduling failed")
+
     def room_maintenance_press(self):
         self.clear_frames()
+        ttk.Label(self.center, font=self.defont, text="Time").grid(column=0, row=0)
+        ttk.Label(self.center, font=self.defont, text="Open Slots").grid(column=1, row=0)
+        times = fetchTimes()
+        timeSlots = fetchHousekeepingSlots()
+        open_times = []
+        len_times = len(times)
+
+        for time_range in range(len_times):
+            ttk.Label(self.center, font=self.defont, text=times[time_range]).grid(column=0, row=time_range+1)
+            ttk.Label(self.center, font=self.defont, text=timeSlots[time_range]).grid(column=1, row=time_range+1)
+            if timeSlots[time_range] > 0:
+                open_times.append(times[time_range])
+
+        if len(open_times) > 0:
+            option = StringVar(self.center)
+            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+1)
+            time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+1)
+            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(getRoomID(self.activeUser), option.get())).grid(column=0, row=len_times+2, columnspan=2)
+        else:
+            ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+1, columnspan=2)
 
     # ____________________OTHER____________________
     def clear_frames(self):
@@ -181,4 +213,6 @@ class CustomerUI:
             self.UI.display_message_frame("Reservation made for %s - %s" % (self.startDate,self.endDate))
         else:
             self.UI.display_message_frame("Room Taken")
+        self.activeUser.login_user(self.activeUser.get_username(),self.activeUser.get_userType(),self.activeUser.get_userID())
         self.pop.destroy()
+        self.home_press()

@@ -54,6 +54,7 @@ class CustomerUI:
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')
+
     # ____________________HOME____________________
     def home_press(self):
         self.clear_frames()
@@ -68,12 +69,12 @@ class CustomerUI:
     def booking_press(self):
         self.clear_frames()
         if self.activeUser.get_userID() == -1:
-            ttk.Label(self.center,text="Please log in to reserve a room",font=24,).grid()
+            ttk.Label(self.center,text="Please log in to reserve a room",font=('Arial',24)).grid()
             return
         reserve = self.activeUser.get_reservation()
         if reserve:
             msg = "Reserve: %s\nFrom:%s\nTo: %s\n" % (reserve[5],reserve[1],reserve[2])
-            ttk.Label(self.center,text=msg).grid(row=0,columnspan=3)
+            ttk.Label(self.center,text=msg,font=('Arial',24)).grid(row=0,columnspan=3)
         else:
             self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1)
             self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1)

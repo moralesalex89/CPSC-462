@@ -9,6 +9,7 @@ from RoomManager import *
 #Creates entry field to recieve valid dates
 class date_entry:
     prev = ''
+
     def __init__(self,frame,rowpos,colpos,colspan,text=''):
         self.var = StringVar()
         self.var.trace('w',self.validate_length)
@@ -20,6 +21,7 @@ class date_entry:
         self.Entry.bind('<FocusIn>',self.reservation_entry)
         self.Entry.bind('<FocusOut>',self.reservation_leave)
         self.prev = text
+
     def validate_length(self, *args):
         maxsize = 8
         temp = self.var.get()

@@ -5,9 +5,11 @@ from UserManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
 
+
 class OceanLuxuryGUI:
     def __init__(self, master):
         self.defont = ("TkDefaultFont", 12)
+        self.font_header = ("TkDefaultFont", 14, 'bold')
         self.activeUser = User(-1, -1, "")
         
         self.img_00 = PhotoImage(file='OL-Assets/OceanLuxuryBanner.png')
@@ -62,7 +64,6 @@ class OceanLuxuryGUI:
         self.booking.grid()
         self.services.grid()
         self.set_sidebar_frame(0)
-
 
     # clear_center used to destroy all tkinter objects from the center and message frame when not needed
     def clear_center(self):
@@ -158,7 +159,6 @@ class OceanLuxuryGUI:
 
             else:
                 self.display_message_frame("Invalid username and/or password used, please try again!")
-
 
     def logoutUser(self):
         return 1

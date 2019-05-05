@@ -107,6 +107,7 @@ class CustomerUI:
             ttk.Label(self.center,text="$849.00/night",font=20).grid(row=6,column=4)
         ttk.Button(self.center,text="Reserve",command=self.reserveCheck,width=10).grid(row=7,column=0,columnspan=2)
         ttk.Button(self.center,text="Cancel",command=self.booking_press,width=10).grid(row=7,column=2,columnspan=2)
+
     def pay_pop(self):
         self.pop = Toplevel()
         self.pop.title("Pay for your reservation")

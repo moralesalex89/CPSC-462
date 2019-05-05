@@ -3,6 +3,7 @@ from tkinter import ttk
 from User import User
 from HKManager import *
 from RoomManager import *
+from PaymentManager import *
 
 class FrontDeskUI:
     def __init__(self, UI_Controller):
@@ -83,6 +84,40 @@ class FrontDeskUI:
             ttk.Button(self.center, text="Schedule Housekeeping", command=lambda: self.add_hk(room_num.get(), option.get())).grid(column=0, row=len_times+3, columnspan=2)
         else:
             ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+1, columnspan=2)
+
+#   __________ACCOUNT__________
+
+    def account_press(self):
+        self.clear_frames()
+        ttk.Button(self.center, text="Account Information", command=lambda: self.account_info()).grid()
+        ttk.Button(self.center, text="Review Transactions", command=lambda: self.display_transactions()).grid()
+
+    def account_info(self):
+        self.clear_frames()
+        #Can someone who used the User class more than me do this one please
+        #Employees maybe will not need to edit CC info like Guests but should be able to change their password
+
+    def dispute_transaction(self, p_id):
+        headers = ["Payment ID", "User ID", "Charge", "Info"]
+        self.UI.display_headers(headers, 0)
+        result = search_transaction(p_id)
+        if result is None:
+            self.UI.display_message_frame("Transaction not found in search")
+            self.display_transactions()
+        else:
+            entry = ['%s' % result[0], '%s' % result[1], '%s' % result[2], '%s' % result[3]]
+            self.UI.display_headers(entry, 1)
+
+        if clear_transaction(p_id):
+            self.UI.display_message_frame("Transaction cleared successfully")
+        else:
+            self.UI.display_message_frame("Transaction clear failed")
+        self.display_transactions()
+
+    def display_transactions(self):
+        self.clear_frames()
+        p_id = self.UI.make_form(self.center, "Payment ID: ")
+        ttk.Button(text="Clear Entry", command=self.dispute_transaction(p_id.get()))
 
     # ____________________OTHER____________________
     def clear_frames(self):

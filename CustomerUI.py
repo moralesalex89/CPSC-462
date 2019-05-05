@@ -5,6 +5,7 @@ from reservationManager import resManager
 import datetime
 from HKManager import *
 from RoomManager import *
+from PaymentManager import *
 
 #Creates entry field to recieve valid dates
 class date_entry:
@@ -162,27 +163,27 @@ class CustomerUI:
 # ____________________ACCOUNT____________________
     def account_press(self):
         self.clear_frames()
-        ttk.Button(self.center, text="Account Information").grid()
-        ttk.Button(self.center, text="Review Transactions").grid()
+        ttk.Button(self.center, text="Account Information", command=lambda: self.account_info()).grid()
+        ttk.Button(self.center, text="Review Transactions", command=lambda: self.display_transactions()).grid()
 
     def account_info(self):
         self.clear_frames()
         #Can someone who used the User class more than me do this one please
 
-    def display_transactions(self, result=None, index=0, page=0):
+    def display_transactions(self, result=None, page=0):
         self.clear_frames()
         if result is None:
-            result = get_payment_list(self.activeUser.get_userID)
+            result = get_payment_list(self.activeUser.get_userID())
         if page >= 10:
             ttk.Button(self.center, text="<<", command=lambda: self.display_transactions(result, 0, page-10))
         if (len(result) - page) >= 10:
             ttk.Button(self.center, text=">>", command=lambda: self.display_transactions(result, 0, page+10))
         headers = ["Payment ID", "Charge", "Info"]
-        self.display_headers(headers, 1)
+        self.UI.display_headers(headers, 0)
         for index in range(min(10, len(result) - page)):
             entry = ['%s' % result[index+page][0], '%s' % result[index+page][2], '%s' % result[index+page][3]]
-            self.display_headers(entry, index)
-            
+            self.UI.display_headers(entry, index)
+
     # ____________________OTHER____________________
     def clear_frames(self):
         self.UI.clear_center()

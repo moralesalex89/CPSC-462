@@ -19,6 +19,7 @@ class OceanLuxuryGUI:
         self.img_05 = PhotoImage(file='OL-Assets/login.png')
         self.img_06 = PhotoImage(file='OL-Assets/signup.png')
         self.img_07 = PhotoImage(file='OL-Assets/logout.png')
+        self.img_08 = PhotoImage(file='OL-Assets/blue_button.png')
 
         # 3 main areas of the screen
         # banner displays the Ocean Luxury logo
@@ -46,7 +47,7 @@ class OceanLuxuryGUI:
         self.login = ttk.Button(self.sidebar_frame, text="Log-in", image=self.img_05, command=self.login_press)
         self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06, command=self.signupUser)
         self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07, command=self.logoutUser)
-
+        self.account = ttk.Button(self.sidebar_frame, text="Account", image=self.img_08)
         self.display_default()
 
     # places all tkinter objects on the screen in their default settings
@@ -58,10 +59,6 @@ class OceanLuxuryGUI:
         self.center_frame.grid()
         self.message_frame.grid()
         self.message_frame.grid_remove()
-        self.home.grid()
-        self.about.grid()
-        self.booking.grid()
-        self.services.grid()
         self.set_sidebar_frame(0)
 
 
@@ -94,20 +91,31 @@ class OceanLuxuryGUI:
     # layout : 0 / default = logout not displayed
     # layout : 1 = login/signup not displayed
     def set_sidebar_frame(self, layout):
-        self.home.config(command=self.UI_Controller.home_press)
-        self.about.config(command=self.UI_Controller.about_press)
-        self.booking.config(command=self.UI_Controller.booking_press)
-        self.services.config(command=self.UI_Controller.services_press)
+        self.home.grid()
+        self.about.grid()
 
-        if layout == 1:
+        if layout == 0:
+            self.home.config(command=self.home_press)
+            self.about.config(command=self.about_press)
+            self.booking.grid_forget()
+            self.services.grid_forget()
+            self.account.grid_forget()
+            self.logout.grid_forget()
+            self.login.grid()
+            self.signup.grid()
+
+        else:
+            self.home.config(command=self.UI_Controller.home_press)
+            self.about.config(command=self.UI_Controller.about_press)
+            self.booking.config(command=self.UI_Controller.booking_press)
+            self.services.config(command=self.UI_Controller.services_press)
+            self.account.config(command=self.UI_Controller.account_press)
+            self.booking.grid()
+            self.services.grid()
+            self.account.grid()
             self.logout.grid()
             self.login.grid_forget()
             self.signup.grid_forget()
-
-        else:
-            self.login.grid()
-            self.signup.grid()
-            self.logout.grid_forget()
 
     def get_center_frame(self):
         return self.center_frame
@@ -135,7 +143,7 @@ class OceanLuxuryGUI:
     def display_headers(self, headers, row):
         index = 0
         for header in headers:
-            ttk.Label(self.center_frame, text=header).grid(column=index, row=row)
+            ttk.Label(self.center_frame, font=self.defont, text=header).grid(column=index, row=row)
             index = index + 1
 
     def login_press(self):
@@ -207,3 +215,9 @@ class OceanLuxuryGUI:
         password = self.make_form(self.center_frame, "Password: ", 0, 1)
         pass_check = self.make_form(self.center_frame, "Re-enter Password: ", 0, 2)
         ttk.Button(self.center_frame, text="Sign-Up", command=lambda: self.signupValidate(username.get(), password.get(), pass_check.get())).grid(columnspan=2)
+
+    def home_press(self):
+        ttk.Label(self.center_frame, text="Currently not logged in").grid()
+
+    def about_press(self):
+        ttk.Label(self.center_frame, text="About Us").grid()

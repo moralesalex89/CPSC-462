@@ -131,6 +131,12 @@ class OceanLuxuryGUI:
         value = ttk.Entry(frame, width=width, font=self.defont,show=shw)
         value.grid(column=col+1, row=row)
         return value
+    
+    def display_headers(self, headers, row):
+        index = 0
+        for header in headers:
+            ttk.Label(self.center_frame, text=header).grid(column=index, row=row)
+            index = index + 1
 
     def login_press(self):
         self.clear_center()

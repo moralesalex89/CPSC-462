@@ -67,8 +67,7 @@ class CustomerUI:
 
     # ____________________BOOKING____________________
     # Success Path
-    # booking_press() -> validate_dates() -> room_selection() -> validate_reservation()
-    # -> pay_pop() -> reserve()
+    # booking_press() -> validate_dates() -> room_selection() -> validate_reservation() -> pay_pop() -> reserve()
 
     # Displays msg if not logged in, returns
     # If reservation -> Display summary of reservation
@@ -76,20 +75,20 @@ class CustomerUI:
     #   search -> self.validate_dates
     def booking_press(self):
         self.clear_frames()
-        #if self.activeUser.get_userID() == -1:
-        #    ttk.Label(self.center,text="Please log in to reserve a room",font=('Arial',24)).grid()
-        #    return
-        #reserve = self.activeUser.get_reservation()
-        #if reserve:
-        #    msg = "Reserved: %s\nFrom:%s\nTo: %s\n" % (reserve[5],reserve[1],reserve[2])
-        #    ttk.Label(self.center,text=msg,font=('Arial',24)).grid()
-        #else:
-        font = ('Yu Gothic UI Semibold',12)
-        ttk.Label(self.center,font=font, text="Start date").grid(column=1,row=0,columnspan=1)
-        ttk.Label(self.center,font=font, text="End date").grid(column=2,row=0,columnspan=1)
-        self.s_date = dateEntry(self.center,rowpos=1,colpos=1,colspan=1)
-        self.e_date = dateEntry(self.center,rowpos=1,colpos=2,colspan=1)
-        ttk.Button(self.center,text="Search",command=self.validate_dates,width=10).grid(row=2,column=1,columnspan=2,pady=5)
+        if self.activeUser.get_userID() == -1:
+            ttk.Label(self.center,text="Please log in to reserve a room",font=('Arial',24)).grid()
+            return
+        reserve = self.activeUser.get_reservation()
+        if reserve:
+            msg = "Reserved: %s\nFrom:%s\nTo: %s\n" % (reserve[5],reserve[1],reserve[2])
+            ttk.Label(self.center,text=msg,font=('Arial',24)).grid()
+        else:
+            font = ('Yu Gothic UI Semibold',12)
+            ttk.Label(self.center,font=font, text="Start date").grid(column=1,row=0,columnspan=1)
+            ttk.Label(self.center,font=font, text="End date").grid(column=2,row=0,columnspan=1)
+            self.s_date = dateEntry(self.center,rowpos=1,colpos=1,colspan=1)
+            self.e_date = dateEntry(self.center,rowpos=1,colpos=2,colspan=1)
+            ttk.Button(self.center,text="Search",command=self.validate_dates,width=10).grid(row=2,column=1,columnspan=2,pady=5)
 
     #Validates date entry fields to check for
     # -Valid date
@@ -113,7 +112,10 @@ class CustomerUI:
         self.room_selection(available_rooms,start_date,end_date)
     
     #Displays available room_types in series of radio buttons
-    #Has 
+    # Will assign radio button to room information by looping through available rooms
+    # Has two buttons Reserve and Cancel
+    #  Reserve -> self.pay_pop()
+    #  Cancel -> self.booking_press()
     def room_selection(self,available_rooms,start_date,end_date):
         self.clear_frames()
         ttk.Label(self.center, text="Start date").grid(column=2,row=0,columnspan=1)
@@ -144,7 +146,9 @@ class CustomerUI:
         ttk.Button(self.center,text="Reserve",command= lambda:self.validate_reservation(start_date,end_date),width=10).grid(row=7,column=2,columnspan=1)
         ttk.Button(self.center,text="Cancel",command=self.booking_press,width=10).grid(row=7,column=3,columnspan=1)
     
-    # Checks 
+    #Validates room selection from radio buttons
+    # -Must have one of the room_types selected
+    # On success -> self.pay_pop()
     def validate_reservation(self,start_date,end_date):
         choice = self.room_select.get()
         room_id = -1
@@ -175,16 +179,19 @@ class CustomerUI:
         ttk.Label(self.pop,text=msg).grid(row=0,column=1)
         ttk.Button(self.pop,text="Pay",command=lambda:self.reserve(start_date,end_date,room_id)).grid(row=1,column=0,padx=20,columnspan=2)
         ttk.Button(self.pop,text="Cancel",command=self.pop.destroy).grid(row=1,column=2)
-        
+    
+    #Reserves room described by pay_pop summary and calls reservationManager class
+    # if Room was not available when pressed it will prompt user there was an error
     def reserve(self,start_date,end_date,room_id):
         if self.resMan.create_reservation(self.resMan,start_date,end_date,self.activeUser.get_userID(),room_id) == True:
             self.UI.display_message_frame("Reservation made for %s - %s" % (start_date,end_date))
+            self.activeUser.login_user(self.activeUser.get_username(),self.activeUser.get_userType(),self.activeUser.get_userID())
+            self.pop.destroy()
+            self.booking_press()
         else:
             self.UI.display_message_frame("Room Taken")
-        self.activeUser.login_user(self.activeUser.get_username(),self.activeUser.get_userType(),self.activeUser.get_userID())
-        self.pop.destroy()
-        self.home_press()
-
+            self.pop.destroy()
+        
     # ____________________SERVICES____________________
     def services_press(self):
         self.clear_frames()
@@ -231,7 +238,3 @@ class CustomerUI:
         self.center = self.UI.get_center_frame()
         self.backup = self.UI.get_backup_frame()
         self.message = self.UI.get_message_frame()
-    
-    
-   
-    

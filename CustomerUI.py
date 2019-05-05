@@ -7,7 +7,7 @@ from HKManager import *
 from RoomManager import *
 
 #Creates entry field to recieve valid dates
-class date_entry:
+class dateEntry:
     prev = ''
     def __init__(self,frame,rowpos,colpos,colspan,text=''):
         self.var = StringVar()
@@ -66,6 +66,10 @@ class CustomerUI:
         ttk.Label(self.center, text="You are in CustomerUI").grid()
 
     # ____________________BOOKING____________________
+    # Displays msg if not logged in, returns
+    # If reservation -> Display summary of reservation
+    # else -> Two date entry fields with search button
+    #   search -> self.validate_dates
     def booking_press(self):
         self.clear_frames()
         if self.activeUser.get_userID() == -1:
@@ -73,21 +77,22 @@ class CustomerUI:
             return
         reserve = self.activeUser.get_reservation()
         if reserve:
-            msg = "Reserve: %s\nFrom:%s\nTo: %s\n" % (reserve[5],reserve[1],reserve[2])
+            msg = "Reserved: %s\nFrom:%s\nTo: %s\n" % (reserve[5],reserve[1],reserve[2])
             ttk.Label(self.center,text=msg,font=('Arial',24)).grid(row=0,columnspan=3)
         else:
-            self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1)
-            self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1)
-            ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)
-            ttk.Label(self.center, text="End date").grid(column=3,row=0,columnspan=1)
-            ttk.Button(self.center,text="Search", command=self.validate_dates,width=10).grid(row=3,column=1,columnspan = 3,pady=5)
-        
+            font = ('Yu Gothic UI Semibold',12)
+            self.sDate = dateEntry(self.center,rowpos=1,colpos=1,colspan=1)
+            self.eDate = dateEntry(self.center,rowpos=1,colpos=3,colspan=1)
+            ttk.Label(self.center,font=font, text="Start date").grid(column=1,row=0,columnspan=1)
+            ttk.Label(self.center,font=font, text="End date").grid(column=3,row=0,columnspan=1)
+            ttk.Button(self.center,text="Search",command=self.validate_dates,width=10).grid(row=3,column=1,columnspan = 3,pady=5)
+    
     def room_selection(self):
         self.clear_frames()
         ttk.Label(self.center, text="Start date").grid(column=1,row=0,columnspan=1)
         ttk.Label(self.center, text="End date").grid(column=3,row=0,columnspan=1)
-        self.sDate = date_entry(self.center,rowpos=1,colpos=1,colspan=1,text=self.sDate.prev)
-        self.eDate = date_entry(self.center,rowpos=1,colpos=3,colspan=1,text=self.eDate.prev)
+        self.sDate = dateEntry(self.center,rowpos=1,colpos=1,colspan=1,text=self.sDate.prev)
+        self.eDate = dateEntry(self.center,rowpos=1,colpos=3,colspan=1,text=self.eDate.prev)
         ttk.Button(self.center,text="Search", command=self.validate_dates,width=10).grid(row=3,column=1,columnspan = 3,pady=5)
 
         self.room_select = IntVar()
@@ -111,6 +116,10 @@ class CustomerUI:
             ttk.Label(self.center,text="$849.00/night",font=20).grid(row=6,column=4)
         ttk.Button(self.center,text="Reserve",command=self.reserveCheck,width=10).grid(row=7,column=0,columnspan=2)
         ttk.Button(self.center,text="Cancel",command=self.booking_press,width=10).grid(row=7,column=2,columnspan=2)
+    
+    #Popup frame that will give summary of purchase with two buttons
+    # Pay -> self.reserve()
+    # Cancel -> Destroys popup
     def pay_pop(self):
         self.pop = Toplevel()
         self.pop.title("Pay for your reservation")
@@ -170,7 +179,7 @@ class CustomerUI:
     # -Valid date
     # -Dates given are within one year of present date
     # -Dates given are later than present date
-    #If valid it will display all available room types
+    #If valid -> self.room_selection()
     def validate_dates(self):
         try:
             startDate = datetime.datetime.strptime(str(self.sDate.Entry.get()),'%m/%d/%y')
@@ -183,11 +192,12 @@ class CustomerUI:
         if startDate < today or startDate > endDate or endDate.year > today.year+1:
             self.UI.display_message_frame("Date is incorrectly formatted")
             return False
-        self.available_rooms = self.resMan.checkReservations(self.resMan,startDate,endDate)
+        self.available_rooms = self.resMan.check_reservations(self.resMan,startDate,endDate)
         self.startDate = startDate
         self.endDate = endDate
         self.room_selection()
 
+    
     def reserveCheck(self):
         choice = self.room_select.get()
         self.room_id = -1
@@ -209,7 +219,7 @@ class CustomerUI:
         self.pay_pop()
         
     def reserve(self):
-        if self.resMan.createReservation(self.resMan,self.startDate,self.endDate,self.activeUser.get_userID(),self.room_id) == True:
+        if self.resMan.create_reservation(self.resMan,self.startDate,self.endDate,self.activeUser.get_userID(),self.room_id) == True:
             self.UI.display_message_frame("Reservation made for %s - %s" % (self.startDate,self.endDate))
         else:
             self.UI.display_message_frame("Room Taken")

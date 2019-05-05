@@ -8,6 +8,7 @@ def db_query(query):
 	db_cursor.execute(query)
 	return db_cursor
 
+
 def create_user(username, password, user_type, address):
 	# checks to make sure username isn't already taken
 	query = "SELECT COUNT(name) FROM Users WHERE name = '%s'" % username
@@ -45,3 +46,19 @@ def verify_login(username, password):
 		hashed_pass = x
 	verified = bcrypt.checkpw(password.encode('utf8'), hashed_pass.encode('utf8'))
 	return verified
+
+
+def retrieve_user(username):
+	query = "SELECT * FROM Users WHERE name = '%s'" % username
+	result = db_query(query).fetchone()
+	if result is None:
+		return False
+	return {'id': result[0], 'username': result[1], 'user_type': result[3]}
+
+
+def retrieve_user_by_id(id):
+	query = "SELECT * FROM Users WHERE user_id = '%s'" % id
+	result = db_query(query).fetchone()
+	if result is None:
+		return False
+	return {'id': result[0], 'username': result[1], 'user_type': result[3]}

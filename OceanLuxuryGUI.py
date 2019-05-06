@@ -12,15 +12,16 @@ class OceanLuxuryGUI:
 		self.defont = ("TkDefaultFont", 12)
 		self.font_header = ("TkDefaultFont", 14, 'bold')
 		self.activeUser = User(-1, -1, "")
-
-		self.img_00 = PhotoImage(file='OL-Assets/OceanLuxuryBanner.png')
-		self.img_01 = PhotoImage(file='OL-Assets/home.png')
-		self.img_02 = PhotoImage(file='OL-Assets/aboutus.png')
-		self.img_03 = PhotoImage(file='OL-Assets/booking.png')
-		self.img_04 = PhotoImage(file='OL-Assets/services.png')
-		self.img_05 = PhotoImage(file='OL-Assets/login.png')
-		self.img_06 = PhotoImage(file='OL-Assets/signup.png')
-		self.img_07 = PhotoImage(file='OL-Assets/logout.png')
+        
+        self.img_00 = PhotoImage(file='OL-Assets/OceanLuxuryBanner.png')
+        self.img_01 = PhotoImage(file='OL-Assets/home.png')
+        self.img_02 = PhotoImage(file='OL-Assets/aboutus.png')
+        self.img_03 = PhotoImage(file='OL-Assets/booking.png')
+        self.img_04 = PhotoImage(file='OL-Assets/services.png')
+        self.img_05 = PhotoImage(file='OL-Assets/login.png')
+        self.img_06 = PhotoImage(file='OL-Assets/signup.png')
+        self.img_07 = PhotoImage(file='OL-Assets/logout.png')
+        self.img_08 = PhotoImage(file='OL-Assets/blue_button.png')
 
 		# 3 main areas of the screen
 		# banner displays the Ocean Luxury logo
@@ -38,33 +39,27 @@ class OceanLuxuryGUI:
 		self.message_frame = ttk.Frame(self.main_frame)
 		self.backup_frame = ttk.Frame(self.main_frame)
 
-		self.UI_Controller = CustomerUI(self)
+        # sidebar buttons displayed on the side, used for navigation
+        self.home = ttk.Button(self.sidebar_frame, text="Home", image=self.img_01)
+        self.about = ttk.Button(self.sidebar_frame, text="About Us", image=self.img_02)
+        self.booking = ttk.Button(self.sidebar_frame, text="Booking", image=self.img_03)
+        self.services = ttk.Button(self.sidebar_frame, text="Services", image=self.img_04)
+        self.login = ttk.Button(self.sidebar_frame, text="Log-in", image=self.img_05, command=self.login_press)
+        self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06, command=self.signupUser)
+        self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07, command=self.logoutUser)
+        self.account = ttk.Button(self.sidebar_frame, text="Account", image=self.img_08)
+        self.display_default()
 
-		# sidebar buttons displayed on the side, used for navigation
-		self.home = ttk.Button(self.sidebar_frame, text="Home", image=self.img_01)
-		self.about = ttk.Button(self.sidebar_frame, text="About Us", image=self.img_02)
-		self.booking = ttk.Button(self.sidebar_frame, text="Booking", image=self.img_03)
-		self.services = ttk.Button(self.sidebar_frame, text="Services", image=self.img_04)
-		self.login = ttk.Button(self.sidebar_frame, text="Log-in", image=self.img_05, command=self.login_press)
-		self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06, command=self.signupUser)
-		self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07, command=self.logoutUser)
-
-		self.display_default()
-
-	# places all tkinter objects on the screen in their default settings
-	# used for initialization
-	def display_default(self):
-		self.banner.grid(column=0, row=0, columnspan=3, sticky=W)
-		self.sidebar_frame.grid(column=0, row=1, sticky=W)
-		self.main_frame.grid(column=1, row=1)
-		self.center_frame.grid()
-		self.message_frame.grid()
-		self.message_frame.grid_remove()
-		self.home.grid()
-		self.about.grid()
-		self.booking.grid()
-		self.services.grid()
-		self.set_sidebar_frame(0)
+    # places all tkinter objects on the screen in their default settings
+    # used for initialization
+    def display_default(self):
+        self.banner.grid(column=0, row=0, columnspan=3, sticky=W)
+        self.sidebar_frame.grid(column=0, row=1, sticky=W)
+        self.main_frame.grid(column=1, row=1)
+        self.center_frame.grid()
+        self.message_frame.grid()
+        self.message_frame.grid_remove()
+        self.set_sidebar_frame(0)
 
 	# clear_center used to destroy all tkinter objects from the center and message frame when not needed
 	def clear_center(self):
@@ -92,26 +87,37 @@ class OceanLuxuryGUI:
 		self.message_frame = ttk.Frame(self.main_frame)
 		self.center_frame.grid()
 
-	# layout : 0 / default = logout not displayed
-	# layout : 1 = login/signup not displayed
-	def set_sidebar_frame(self, layout):
-		self.home.config(command=self.UI_Controller.home_press)
-		self.about.config(command=self.UI_Controller.about_press)
-		self.booking.config(command=self.UI_Controller.booking_press)
-		self.services.config(command=self.UI_Controller.services_press)
+    # layout : 0 / default = logout not displayed
+    # layout : 1 = login/signup not displayed
+    def set_sidebar_frame(self, layout):
+        self.home.grid()
+        self.about.grid()
 
-		if layout == 1:
-			self.logout.grid()
-			self.login.grid_forget()
-			self.signup.grid_forget()
+        if layout == 0:
+            self.home.config(command=self.home_press)
+            self.about.config(command=self.about_press)
+            self.booking.grid_forget()
+            self.services.grid_forget()
+            self.account.grid_forget()
+            self.logout.grid_forget()
+            self.login.grid()
+            self.signup.grid()
 
-		else:
-			self.login.grid()
-			self.signup.grid()
-			self.logout.grid_forget()
+        else:
+            self.home.config(command=self.UI_Controller.home_press)
+            self.about.config(command=self.UI_Controller.about_press)
+            self.booking.config(command=self.UI_Controller.booking_press)
+            self.services.config(command=self.UI_Controller.services_press)
+            self.account.config(command=self.UI_Controller.account_press)
+            self.booking.grid()
+            self.services.grid()
+            self.account.grid()
+            self.logout.grid()
+            self.login.grid_forget()
+            self.signup.grid_forget()
 
-	def get_center_frame(self):
-		return self.center_frame
+    def get_center_frame(self):
+        return self.center_frame
 
 	def get_backup_frame(self):
 		return self.backup_frame
@@ -127,11 +133,17 @@ class OceanLuxuryGUI:
 		self.center_frame.grid_forget()
 		self.backup_frame.grid()
 
-	def make_form(self, frame, name, col, row,shw=None, width=20):
-		ttk.Label(frame, text=name, font=self.defont).grid(column=col, row=row)
-		value = ttk.Entry(frame, width=width, font=self.defont,show=shw)
-		value.grid(column=col+1, row=row)
-		return value
+    def make_form(self, frame, name, col, row,shw=None, width=20):
+        ttk.Label(frame, text=name, font=self.defont).grid(column=col, row=row)
+        value = ttk.Entry(frame, width=width, font=self.defont,show=shw)
+        value.grid(column=col+1, row=row)
+        return value
+    
+    def display_headers(self, headers, row):
+        index = 0
+        for header in headers:
+            ttk.Label(self.center_frame, font=self.defont, text=header).grid(column=index, row=row)
+            index = index + 1
 
 	def login_press(self):
 		self.clear_center()
@@ -194,3 +206,9 @@ class OceanLuxuryGUI:
 		password = self.make_form(self.center_frame, "Password: ", 0, 1)
 		pass_check = self.make_form(self.center_frame, "Re-enter Password: ", 0, 2)
 		ttk.Button(self.center_frame, text="Sign-Up", command=lambda: self.signupValidate(username.get(), password.get(), pass_check.get())).grid(columnspan=2)
+
+    def home_press(self):
+        ttk.Label(self.center_frame, text="Currently not logged in").grid()
+
+    def about_press(self):
+        ttk.Label(self.center_frame, text="About Us").grid()

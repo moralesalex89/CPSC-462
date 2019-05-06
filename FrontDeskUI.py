@@ -176,41 +176,41 @@ class FrontDeskUI:
 
 #   __________ACCOUNT__________
 
-    def account_press(self):
-        self.clear_frames()
-        ttk.Button(self.center, text="Account Information", command=lambda: self.account_info()).grid()
-        ttk.Button(self.center, text="Review Transactions", command=lambda: self.display_transactions()).grid()
+	def account_press(self):
+		self.clear_frames()
+		ttk.Button(self.center, text="Account Information", command=lambda: self.account_info()).grid()
+		ttk.Button(self.center, text="Review Transactions", command=lambda: self.display_transactions()).grid()
 
-    def account_info(self):
-        self.clear_frames()
-        #Can someone who used the User class more than me do this one please
-        #Employees maybe will not need to edit CC info like Guests but should be able to change their password
+	def account_info(self):
+		self.clear_frames()
+		#Can someone who used the User class more than me do this one please
+		#Employees maybe will not need to edit CC info like Guests but should be able to change their password
 
-    def dispute_transaction(self, p_id):
-        headers = ["Payment ID", "User ID", "Charge", "Info"]
-        self.UI.display_headers(headers, 0)
-        result = search_transaction(p_id)
-        if result is None:
-            self.UI.display_message_frame("Transaction not found in search")
-            self.display_transactions()
-        else:
-            entry = ['%s' % result[0], '%s' % result[1], '%s' % result[2], '%s' % result[3]]
-            self.UI.display_headers(entry, 1)
+	def dispute_transaction(self, p_id):
+		headers = ["Payment ID", "User ID", "Charge", "Info"]
+		self.UI.display_headers(headers, 0)
+		result = search_transaction(p_id)
+		if result is None:
+			self.UI.display_message_frame("Transaction not found in search")
+			self.display_transactions()
+		else:
+			entry = ['%s' % result[0], '%s' % result[1], '%s' % result[2], '%s' % result[3]]
+			self.UI.display_headers(entry, 1)
 
-        if clear_transaction(p_id):
-            self.UI.display_message_frame("Transaction cleared successfully")
-        else:
-            self.UI.display_message_frame("Transaction clear failed")
-        self.display_transactions()
+		if clear_transaction(p_id):
+			self.UI.display_message_frame("Transaction cleared successfully")
+		else:
+			self.UI.display_message_frame("Transaction clear failed")
+		self.display_transactions()
 
-    def display_transactions(self):
-        self.clear_frames()
-        p_id = self.UI.make_form(self.center, "Payment ID: ")
-        ttk.Button(text="Clear Entry", command=self.dispute_transaction(p_id.get()))
+	def display_transactions(self):
+		self.clear_frames()
+		p_id = self.UI.make_form(self.center, "Payment ID: ")
+		ttk.Button(text="Clear Entry", command=self.dispute_transaction(p_id.get()))
 
-    # ____________________OTHER____________________
-    def clear_frames(self):
-        self.UI.clear_center()
-        self.center = self.UI.get_center_frame()
-        self.backup = self.UI.get_backup_frame()
-        self.message = self.UI.get_message_frame()
+	# ____________________OTHER____________________
+	def clear_frames(self):
+		self.UI.clear_center()
+		self.center = self.UI.get_center_frame()
+		self.backup = self.UI.get_backup_frame()
+		self.message = self.UI.get_message_frame()

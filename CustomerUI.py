@@ -79,7 +79,7 @@ class CustomerUI:
     # ____________________ABOUT____________________
     def about_press(self):
         self.clear_frames()
-        ttk.Label(self.center, text="You are in CustomerUI").grid()
+        ttk.Label(self.center, image= self.UI.img_09,bg=None).grid(sticky="W")
 
     # ____________________BOOKING____________________
     # Success Path

@@ -22,6 +22,7 @@ class OceanLuxuryGUI:
 		self.img_06 = PhotoImage(file='OL-Assets/signup.png')
 		self.img_07 = PhotoImage(file='OL-Assets/logout.png')
 		self.img_08 = PhotoImage(file='OL-Assets/blue_button.png')
+		self.img_09 = PhotoImage(file='OL-Assets/about.png')
 
 		# 3 main areas of the screen
 		# banner displays the Ocean Luxury logo
@@ -207,7 +208,9 @@ class OceanLuxuryGUI:
 		ttk.Button(self.center_frame, text="Sign-Up", command=lambda: self.signupValidate(username.get(), password.get(), pass_check.get())).grid(columnspan=2)
 
 	def home_press(self):
+		self.clear_center()
 		ttk.Label(self.center_frame, text="Currently not logged in").grid()
 
 	def about_press(self):
-		ttk.Label(self.center_frame, text="About Us").grid()
+		self.clear_center()
+		ttk.Label(self.center_frame, image=self.img_09,bg=None).grid(sticky="W")

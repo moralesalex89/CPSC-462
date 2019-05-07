@@ -33,7 +33,7 @@ class resManager:
 	def cancel_reservation(self):
 		pass
 
-	def update_reservation(self):
+	def update_reservation(self,room_status,room_id):
 		db_cursor = db.cursor()
 		query = "UPDATE Rooms SET roomStatus = '%s' WHERE room_id = %d" % (room_status, room_id)
 		db_cursor.execute(query)

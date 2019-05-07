@@ -147,6 +147,8 @@ class CustomerUI:
 
         ttk.Label(self.center, text="Item").grid(column=3, row=0, columnspan=1)
         ttk.Label(self.center, text="Price").grid(column=5, row=0, columnspan=1)
+        ttk.Label(self.center, text="Item").grid(column=11, row=0, columnspan=1)
+        ttk.Label(self.center, text="Price").grid(column=13, row=0, columnspan=1)
 
         # snack_list is list of (name, price) tuples
         self.snack_list = self.invMan.checkStock(self.invMan)
@@ -159,37 +161,47 @@ class CustomerUI:
             # Parse the query for the name and price
             snack_name = self.snack_list[snack][0]
             snack_price = self.snack_list[snack][1]
-            print(self.snack_list[snack][0])
-            print(self.snack_list[snack][1])
+            print(str(snack) + " " + str(self.snack_list[snack][0]) + " " + str(self.snack_list[snack][1]))
+            # print(self.snack_list[snack][0])
+            # print(self.snack_list[snack][1])
+
+            if snack < 5:
+                displaycol = 1
+                displayrow = snack + 1
+            elif 5 <= snack <= 10:
+                displaycol = 9
+                displayrow = snack - 4
 
             # Display the correct image
             if snack_name == 'Cheetos':
-                ttk.Label(self.center, image=self.img_cheetos).grid(column=1, row=snack + 1, columnspan=1)
+                ttk.Label(self.center, image=self.img_cheetos).grid(column=displaycol, row=displayrow, columnspan=1)
             elif snack_name == 'Famous Amos':
-                ttk.Label(self.center, image=self.img_famous_amos).grid(column=1, row=snack + 1, columnspan=1)
+                ttk.Label(self.center, image=self.img_famous_amos).grid(column=displaycol, row=displayrow, columnspan=1)
             elif snack_name == 'Fritos':
-                ttk.Label(self.center, image=self.img_fritos).grid(column=1, row=snack + 1, columnspan=1)
+                ttk.Label(self.center, image=self.img_fritos).grid(column=displaycol, row=displayrow, columnspan=1)
             elif snack_name == 'Lays':
-                ttk.Label(self.center, image=self.img_lays).grid(column=1, row=snack + 1, columnspan=1)
+                ttk.Label(self.center, image=self.img_lays).grid(column=displaycol, row=displayrow, columnspan=1)
             elif snack_name == 'M&Ms':
-                ttk.Label(self.center, image=self.img_mnm).grid(column=1, row=snack + 1, columnspan=1)
-            elif snack_name == 'Oreos':
-                ttk.Label(self.center, image=self.img_oreos).grid(column=1, row=snack + 1, columnspan=1)
-            elif snack_name == 'Pop Tarts':
-                ttk.Label(self.center, image=self.img_pop_tarts).grid(column=1, row=snack + 1, columnspan=1)
-            elif snack_name == 'Reeses':
-                ttk.Label(self.center, image=self.img_reeses).grid(column=1, row=snack + 1, columnspan=1)
-            elif snack_name == 'Rice Krispies':
-                ttk.Label(self.center, image=self.img_rice_krispies).grid(column=1, row=snack + 1, columnspan=1)
-            elif snack_name == 'Trail Mix':
-                ttk.Label(self.center, image=self.img_trail_mix).grid(column=1, row=snack + 1, columnspan=1)
+                ttk.Label(self.center, image=self.img_mnm).grid(column=displaycol, row=displayrow, columnspan=1)
 
-            # Display th ename and price
-            ttk.Label(self.center, text=snack_name).grid(column=3, row=snack + 1, columnspan=1)
-            ttk.Label(self.center, text=snack_price).grid(column=5, row=snack + 1, columnspan=1)
+            # 2nd Column, 1 3 5 7 ----  9 11 13 15.
+            elif snack_name == 'Oreos':
+                ttk.Label(self.center, image=self.img_oreos).grid(column=displaycol, row=displayrow, columnspan=1)
+            elif snack_name == 'Pop Tarts':
+                ttk.Label(self.center, image=self.img_pop_tarts).grid(column=displaycol, row=displayrow, columnspan=1)
+            elif snack_name == 'Reeses':
+                ttk.Label(self.center, image=self.img_reeses).grid(column=displaycol, row=displayrow, columnspan=1)
+            elif snack_name == 'Rice Krispies':
+                ttk.Label(self.center, image=self.img_rice_krispies).grid(column=displaycol, row=displayrow, columnspan=1)
+            elif snack_name == 'Trail Mix':
+                ttk.Label(self.center, image=self.img_trail_mix).grid(column=displaycol, row=displayrow, columnspan=1)
+
+            # Display the name and price
+            ttk.Label(self.center, text=snack_name).grid(column=displaycol + 2, row=displayrow, columnspan=1)
+            ttk.Label(self.center, text=snack_price).grid(column=displaycol + 4, row=displayrow, columnspan=1)
 
             # Display button to purchase
-            ttk.Button(self.center, text="Purchase", command=self.invMan.buyItem(self.invMan, snack_name), width=10).grid(row=3, column=7, columnspan=1, pady=5)
+            ttk.Button(self.center, text="Purchase", command=lambda: self.invMan.buyItem(self.invMan, snack_name), width=10).grid(row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
 
     def add_hk(self, room_num, time):
         if addHousekeepingEntry(int(room_num), time):

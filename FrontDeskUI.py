@@ -42,7 +42,8 @@ class FrontDeskUI:
 		ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
 		ttk.Button(self.center, text="Reset Maintenance Schedule", command=self.reset_maintenance_press).grid()
 		ttk.Button(self.center, text="Guest Services", command=self.guest_service_press).grid()
-		ttk.Button(self.center, text="Restock Food Inventory", command=self.invManager.stockItems).grid()
+		ttk.Button(self.center, text="Initialize Food Inventory", command=lambda: self.invManager.stockItems).grid()
+		ttk.Button(self.center, text="Restock Food Inventory", command=lambda: self.invManager.restockItems).grid()
 
 	def reset_maintenance_press(self):
 		self.clear_frames()

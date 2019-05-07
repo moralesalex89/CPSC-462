@@ -5,7 +5,7 @@ class InventoryManager:
 
     def checkStock(self):
         db_cursor = db.cursor()
-        query = "SELECT name, cost FROM Food_Inventory WHERE stock > 0"
+        query = "SELECT name, cost, stock FROM Food_Inventory WHERE stock > 0"
         db_cursor.execute(query)
 
         result = list(db_cursor.fetchall())
@@ -13,7 +13,7 @@ class InventoryManager:
 
     def buyItem(self, food_name):
         db_cursor = db.cursor()
-        query = "UPDATE Food_Inventory SET  stock = stock - 1 WHERE name = %s"
+        query = "UPDATE Food_Inventory SET  stock = stock - 1 WHERE name = '%s'"
         db_cursor.execute(query, food_name)
         db.commit()
         return True
@@ -30,9 +30,8 @@ class InventoryManager:
         query6 = "INSERT IGNORE INTO Food_Inventory (food_id, name, cost, stock) VALUES (06, 'Oreos', 1.25, 100)"
         query7 = "INSERT IGNORE INTO Food_Inventory (food_id, name, cost, stock) VALUES (07, 'Pop Tarts', 2.00, 100)"
         query8 = "INSERT IGNORE INTO Food_Inventory (food_id, name, cost, stock) VALUES (08, 'Reeses', 1.00, 100)"
-        query9 = "INSERT IGNORE INTO Food_Inventory (food_id, name, cost, stock) " \
-                 "VALUES (08, 'Rice Krispies', 1.00, 100)"
-        query10 = "INSERT IGNORE INTO Food_Inventory (food_id, name, cost, stock) VALUES (08, 'Trail Mix', 1.25, 100)"
+        query9 = "INSERT IGNORE INTO Food_Inventory (food_id, name, cost, stock) VALUES (09, 'Rice Krispies', 1.00, 100)"
+        query10 = "INSERT IGNORE INTO Food_Inventory (food_id, name, cost, stock) VALUES (10, 'Trail Mix', 1.25, 100)"
 
         db_cursor.execute(query1)
         db.commit()
@@ -55,5 +54,16 @@ class InventoryManager:
         db_cursor.execute(query10)
         db.commit()
 
-        print("Updated Food Inventory")
+        print("Initialized Food Inventory")
         return True
+
+    def restockItems(self):
+        db_cursor = db.cursor()
+        query = "UPDATE Food_Inventory SET stock = 100 WHERE stock < 100"
+        return True
+
+    def viewInventory(self):
+        inventory = self.checkStock(self)
+
+
+

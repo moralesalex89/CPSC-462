@@ -1,4 +1,5 @@
 from includes.DatabaseConfig import db
+from tkinter import messagebox
 
 
 class InventoryManager:
@@ -13,9 +14,10 @@ class InventoryManager:
 
     def buyItem(self, food_name):
         db_cursor = db.cursor()
-        query = "UPDATE Food_Inventory SET  stock = stock - 1 WHERE name = '%s'"
+        query = "UPDATE Food_Inventory SET stock = stock - 1 WHERE name = '%s'"
         db_cursor.execute(query, food_name)
         db.commit()
+        print(food_name + " snack purchased!")
         return True
 
     # Fill up the database with food to initialize it
@@ -63,7 +65,21 @@ class InventoryManager:
         return True
 
     def viewInventory(self):
-        inventory = self.checkStock(self)
+        inventory = self.checkStock()
+
+        inventorystr = ""
+
+        inventorylen = len(inventory)
+        for item in range(inventorylen):
+            inventorystr += inventory[item][0] + " " + str(inventory[item][2]) + "\n"
+
+        messagebox.showinfo("Current Food in Inventory", inventorystr)
+        print("viewing inventory")
+        return True
+
+
+
+
 
 
 

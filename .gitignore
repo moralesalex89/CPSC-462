@@ -7,3 +7,6 @@
 $ Ignore pycache
 __pycache__/
 includes/__pycache__/DatabaseConfig.cpython-37.pyc
+
+$ Ignore venv
+venv/

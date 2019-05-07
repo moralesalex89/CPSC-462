@@ -5,10 +5,12 @@ from reservationManager import resManager
 import datetime
 from HKManager import *
 from RoomManager import *
+from PaymentManager import *
 
 #Creates entry field to recieve valid dates
 class dateEntry:
     prev = ''
+
     def __init__(self,frame,rowpos,colpos,colspan,text=''):
         self.var = StringVar()
         self.var.trace('w',self.validate_length)
@@ -20,6 +22,7 @@ class dateEntry:
         self.Entry.bind('<FocusIn>',self.reservation_entry)
         self.Entry.bind('<FocusOut>',self.reservation_leave)
         self.prev = text
+
     def validate_length(self, *args):
         maxsize = 8
         temp = self.var.get()
@@ -114,7 +117,7 @@ class CustomerUI:
     #Displays available room_types in series of radio buttons
     # Will assign radio button to room information by looping through available rooms
     # Has two buttons Reserve and Cancel
-    #  Reserve -> self.pay_pop()
+    #  Reserve -> self.validate_reservation()
     #  Cancel -> self.booking_press()
     def room_selection(self,available_rooms,start_date,end_date):
         self.clear_frames()
@@ -231,6 +234,30 @@ class CustomerUI:
             ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(getRoomID(self.activeUser), option.get())).grid(column=0, row=len_times+2, columnspan=2)
         else:
             ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+1, columnspan=2)
+
+# ____________________ACCOUNT____________________
+    def account_press(self):
+        self.clear_frames()
+        ttk.Button(self.center, text="Account Information", command=lambda: self.account_info()).grid()
+        ttk.Button(self.center, text="Review Transactions", command=lambda: self.display_transactions()).grid()
+
+    def account_info(self):
+        self.clear_frames()
+        #Can someone who used the User class more than me do this one please
+
+    def display_transactions(self, result=None, page=0):
+        self.clear_frames()
+        if result is None:
+            result = get_payment_list(self.activeUser.get_userID())
+        if page >= 10:
+            ttk.Button(self.center, text="<<", command=lambda: self.display_transactions(result, 0, page-10))
+        if (len(result) - page) >= 10:
+            ttk.Button(self.center, text=">>", command=lambda: self.display_transactions(result, 0, page+10))
+        headers = ["Payment ID", "Charge", "Info"]
+        self.UI.display_headers(headers, 0)
+        for index in range(min(10, len(result) - page)):
+            entry = ['%s' % result[index+page][0], '%s' % result[index+page][2], '%s' % result[index+page][3]]
+            self.UI.display_headers(entry, index)
 
     # ____________________OTHER____________________
     def clear_frames(self):

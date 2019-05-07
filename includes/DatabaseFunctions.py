@@ -7,6 +7,7 @@ def db_query(query):
 	db_cursor.execute(query)
 	return db_cursor
 
+
 def create_user(username, password, user_type, address):
 	# checks to make sure username isn't already taken
 	query = "SELECT COUNT(name) FROM Users WHERE name = '%s'" % username
@@ -20,7 +21,7 @@ def create_user(username, password, user_type, address):
 	db.commit()
 	return True
 
-#@return - list of reservation details obtained from a user_id
+# @return - list of reservation details obtained from a user_id
 def get_reservation(user_id):
 	query = "SELECT * FROM Reservations WHERE user_id = '%d'" % user_id
 	result = list(db_query(query).fetchone())
@@ -29,11 +30,13 @@ def get_reservation(user_id):
 	result.append(result2[0])
 	return result
 
+
 def get_id(username):
 	query = "SELECT user_id FROM Users WHERE name = '%s'" % username
 	result = db_query(query).fetchone()
 	return result[0]
-	
+
+
 def verify_login(username, password):
 	query = "SELECT pass FROM Users WHERE name = '%s'" % username
 	result = db_query(query).fetchone()
@@ -42,5 +45,21 @@ def verify_login(username, password):
 		return False
 	for x in result:
 		hashed_pass = x
-	verified = bcrypt.checkpw(password.encode('utf8'), hashed_pass.encode('utf8'))
+	verified = bcrypt.checkpw(password.encode('utf8'), hashed_pass.decode().encode('utf8'))
 	return verified
+
+
+def retrieve_user(username):
+	query = "SELECT * FROM Users WHERE name = '%s'" % username
+	result = db_query(query).fetchone()
+	if result is None:
+		return False
+	return {'id': result[0], 'username': result[1], 'user_type': result[3]}
+
+
+def retrieve_user_by_id(id):
+	query = "SELECT * FROM Users WHERE user_id = '%s'" % id
+	result = db_query(query).fetchone()
+	if result is None:
+		return False
+	return {'id': result[0], 'username': result[1], 'user_type': result[3]}

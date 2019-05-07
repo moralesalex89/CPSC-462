@@ -151,9 +151,7 @@ class CustomerUI:
         ttk.Label(self.center, text="Price").grid(column=13, row=0, columnspan=1)
 
         # snack_list is list of (name, price) tuples
-        self.snack_list = self.invMan.checkStock(self.invMan)
-
-
+        self.snack_list = self.invMan.check_stock(self.invMan)
         self.snack_list_len = len(self.snack_list)
 
         for snack in range(self.snack_list_len):
@@ -176,53 +174,53 @@ class CustomerUI:
             # 1st Column, 1 3 5 7 ----  9 11 13 15.
             if snack_name == 'Cheetos':
                 ttk.Label(self.center, image=self.img_cheetos).grid(column=displaycol, row=displayrow, columnspan=1)
-                ttk.Button(self.center, text="Purchase", command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Cheetos'), width=10).grid(row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
+                ttk.Button(self.center, text="Purchase", command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Cheetos'), width=10).grid(row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
             elif snack_name == 'Famous Amos':
                 ttk.Label(self.center, image=self.img_famous_amos).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Famous Amos'), width=10).grid(
-                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Famous Amos'), width=10).grid(
+                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5, padx=15)
             elif snack_name == 'Fritos':
                 ttk.Label(self.center, image=self.img_fritos).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Fritos'), width=10).grid(
-                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Fritos'), width=10).grid(
+                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5, padx=15)
             elif snack_name == 'Lays':
                 ttk.Label(self.center, image=self.img_lays).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Lays'), width=10).grid(
-                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Lays'), width=10).grid(
+                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5, padx=15)
             elif snack_name == 'M&Ms':
                 ttk.Label(self.center, image=self.img_mnm).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='M&Ms'), width=10).grid(
-                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='M&Ms'), width=10).grid(
+                    row=displayrow, column=displaycol + 6, columnspan=1, pady=5, padx=15)
 
             # 2nd Column, 1 3 5 7 ----  9 11 13 15.
             elif snack_name == 'Oreos':
                 ttk.Label(self.center, image=self.img_oreos).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Oreos'), width=10).grid(
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Oreos'), width=10).grid(
                     row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
             elif snack_name == 'Pop Tarts':
                 ttk.Label(self.center, image=self.img_pop_tarts).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Pop Tarts'), width=10).grid(
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Pop Tarts'), width=10).grid(
                     row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
             elif snack_name == 'Reeses':
                 ttk.Label(self.center, image=self.img_reeses).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Reeses'), width=10).grid(
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Reeses'), width=10).grid(
                     row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
             elif snack_name == 'Rice Krispies':
                 ttk.Label(self.center, image=self.img_rice_krispies).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Rice Krispies'), width=10).grid(
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Rice Krispies'), width=10).grid(
                     row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
             elif snack_name == 'Trail Mix':
                 ttk.Label(self.center, image=self.img_trail_mix).grid(column=displaycol, row=displayrow, columnspan=1)
                 ttk.Button(self.center, text="Purchase",
-                           command=lambda: self.invMan.buyItem(self=self.invMan, food_name='Trail Mix'), width=10).grid(
+                           command=lambda: self.invMan.buy_item(self=self.invMan, food_name='Trail Mix'), width=10).grid(
                     row=displayrow, column=displaycol + 6, columnspan=1, pady=5)
 
             # Display the name and price

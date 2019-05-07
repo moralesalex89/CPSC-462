@@ -42,9 +42,7 @@ class FrontDeskUI:
 		ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
 		ttk.Button(self.center, text="Reset Maintenance Schedule", command=self.reset_maintenance_press).grid()
 		ttk.Button(self.center, text="Guest Services", command=self.guest_service_press).grid()
-		ttk.Button(self.center, text="Initialize Food Inventory", command=lambda: self.invManager.stockItems()).grid()
-		ttk.Button(self.center, text="Restock Food Inventory", command=lambda: self.invManager.restockItems()).grid()
-		ttk.Button(self.center, text="View Food Inventory", command=lambda: self.invManager.viewInventory()).grid()
+		ttk.Button(self.center, text="Food Services", command=lambda: self.food_service_press()).grid()
 
 	def reset_maintenance_press(self):
 		self.clear_frames()
@@ -57,6 +55,8 @@ class FrontDeskUI:
 
 	def food_service_press(self):
 		self.clear_frames()
+		ttk.Button(self.center, text="Restock Food Inventory", command=lambda: self.invManager.restock_items()).grid()
+		ttk.Button(self.center, text="View Food Inventory", command=lambda: self.invManager.view_inventory()).grid()
 
 	def clear_hk(self, password):
 		#if password is correct, filler code used here for testing

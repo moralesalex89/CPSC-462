@@ -187,10 +187,10 @@ class CustomerUI:
     # if Room was not available when pressed it will prompt user there was an error
     def reserve(self,start_date,end_date,room_id):
         if self.resMan.create_reservation(self.resMan,start_date,end_date,self.activeUser.get_userID(),room_id) == True:
-            self.UI.display_message_frame("Reservation made for %s - %s" % (start_date,end_date))
-            self.activeUser.login_user(self.activeUser.get_username(),self.activeUser.get_userType(),self.activeUser.get_userID())
-            self.pop.destroy()
             self.booking_press()
+            self.UI.display_message_frame("Reservation made for %s - %s" % (start_date,end_date))
+            self.activeUser.login_user(self.activeUser.get_username())
+            self.pop.destroy()
         else:
             self.UI.display_message_frame("Room Taken")
             self.pop.destroy()

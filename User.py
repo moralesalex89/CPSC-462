@@ -14,7 +14,6 @@ class User:
 		self.userID = user_info['id']
 		self.userType = user_info['user_type']
 		self.username = u_name
-		print(user_info['user_type'])
 		try:
 			self.reservation = get_reservation(self.userID)
 		except:

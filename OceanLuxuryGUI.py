@@ -155,11 +155,9 @@ class OceanLuxuryGUI:
 	def loginUser(self, u_name, password):
 		verify = verify_login(u_name, password)
 		usr = self.activeUser
-		print(usr.userType)
 		if verify:
 			usr.login_user(u_name)
 
-		print(usr.get_userType())
 		if usr.get_userType() == 'Customer':
 			self.UI_Controller = CustomerUI(self)
 			self.UI_Controller.home_press()
@@ -192,7 +190,7 @@ class OceanLuxuryGUI:
 			if password != pass_check:
 				error = error + " - Passwords do not match\n"
 		if error == "":
-			if create_user(username, password, 0, ''):
+			if create_user(username, password, 'Customer', ''):
 				self.UI_Controller.home_press()
 				self.display_message_frame("Your account was created successfully!")
 				self.set_sidebar_frame(1)

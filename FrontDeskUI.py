@@ -4,6 +4,7 @@ from User import User
 from HKManager import *
 from RoomManager import *
 from reservationManager import resManager
+from InventoryManager import InventoryManager
 from includes.DatabaseFunctions import *
 from PaymentManager import *
 
@@ -19,6 +20,7 @@ class FrontDeskUI:
 		self.message = UI_Controller.get_message_frame()
 		self.activeUser = UI_Controller.activeUser
 		self.resManager = resManager()
+		self.invManager = InventoryManager()
 
 	# ____________________HOME____________________
 	def home_press(self):
@@ -40,6 +42,7 @@ class FrontDeskUI:
 		ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
 		ttk.Button(self.center, text="Reset Maintenance Schedule", command=self.reset_maintenance_press).grid()
 		ttk.Button(self.center, text="Guest Services", command=self.guest_service_press).grid()
+		ttk.Button(self.center, text="Restock Food Inventory", command=self.invManager.stockItems).grid()
 
 	def reset_maintenance_press(self):
 		self.clear_frames()

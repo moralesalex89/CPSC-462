@@ -17,7 +17,9 @@ def create_user(username, password, user_type, address):
 		return False
 	# if username is available, continue
 	hashed_pass = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
-	query = "INSERT INTO Users (name, pass, user_type, address) VALUES ('%s','%s','%d','%s')" % (username, hashed_pass.decode('utf8'), user_type, address)
+	query = "INSERT INTO Users (name, pass, user_type, address) VALUES ('%s','%s','%d','%s')" % (username, hashed_pass('utf8'), user_type, address)
+	#query = "INSERT INTO Users (name, pass, user_type, address) VALUES ('%s','%s','%d','%s')" % (
+	#username, hashed_pass.decode('utf8'), user_type, address)
 	db_query(query)
 	db.commit()
 	return True
@@ -46,7 +48,7 @@ def verify_login(username, password):
 		return False
 	for x in result:
 		hashed_pass = x
-	verified = bcrypt.checkpw(password.encode('utf8'), hashed_pass.decode().encode('utf8'))
+	verified = bcrypt.checkpw(password.encode('utf8'), hashed_pass.encode('utf8'))
 	return verified
 
 

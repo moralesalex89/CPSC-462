@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from User import User
 from reservationManager import resManager
+from InventoryManager import InventoryManager
 import datetime
 from HKManager import *
 from RoomManager import *
@@ -54,9 +55,21 @@ class CustomerUI:
         self.message = UI_Controller.get_message_frame()
         self.activeUser = UI_Controller.activeUser
         self.resMan = resManager
+        self.invMan = InventoryManager
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')
+        # Snack Images, chose 10 snacks
+        self.img_cheetos = PhotoImage(file='OL-Assets/cheetos.png')
+        self.img_famous_amos = PhotoImage(file='OL-Assets/famous_amos.png')
+        self.img_fritos = PhotoImage(file='OL-Assets/fritos.png')
+        self.img_lays = PhotoImage(file='OL-Assets/lays.png')
+        self.img_mnm = PhotoImage(file='OL-Assets/mnm.png')
+        self.img_oreos = PhotoImage(file='OL-Assets/oreos.png')
+        self.img_pop_tarts = PhotoImage(file='OL-Assets/pop_tarts.png')
+        self.img_reeses = PhotoImage(file='OL-Assets/reeses.png')
+        self.img_rice_krispies = PhotoImage(file='OL-Assets/rice_krispies.png')
+        self.img_trail_mix = PhotoImage(file='OL-Assets/trail_mix.png')
 
     # ____________________HOME____________________
     def home_press(self):
@@ -131,6 +144,52 @@ class CustomerUI:
 
     def food_service_press(self):
         self.clear_frames()
+
+        ttk.Label(self.center, text="Item").grid(column=3, row=0, columnspan=1)
+        ttk.Label(self.center, text="Price").grid(column=5, row=0, columnspan=1)
+
+        # snack_list is list of (name, price) tuples
+        self.snack_list = self.invMan.checkStock(self.invMan)
+
+
+        self.snack_list_len = len(self.snack_list)
+
+        for snack in range(self.snack_list_len):
+
+            # Parse the query for the name and price
+            snack_name = self.snack_list[snack][0]
+            snack_price = self.snack_list[snack][1]
+            print(self.snack_list[snack][0])
+            print(self.snack_list[snack][1])
+
+            # Display the correct image
+            if snack_name == 'Cheetos':
+                ttk.Label(self.center, image=self.img_cheetos).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Famous Amos':
+                ttk.Label(self.center, image=self.img_famous_amos).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Fritos':
+                ttk.Label(self.center, image=self.img_fritos).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Lays':
+                ttk.Label(self.center, image=self.img_lays).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'M&Ms':
+                ttk.Label(self.center, image=self.img_mnm).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Oreos':
+                ttk.Label(self.center, image=self.img_oreos).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Pop Tarts':
+                ttk.Label(self.center, image=self.img_pop_tarts).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Reeses':
+                ttk.Label(self.center, image=self.img_reeses).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Rice Krispies':
+                ttk.Label(self.center, image=self.img_rice_krispies).grid(column=1, row=snack + 1, columnspan=1)
+            elif snack_name == 'Trail Mix':
+                ttk.Label(self.center, image=self.img_trail_mix).grid(column=1, row=snack + 1, columnspan=1)
+
+            # Display th ename and price
+            ttk.Label(self.center, text=snack_name).grid(column=3, row=snack + 1, columnspan=1)
+            ttk.Label(self.center, text=snack_price).grid(column=5, row=snack + 1, columnspan=1)
+
+            # Display button to purchase
+            ttk.Button(self.center, text="Purchase", command=self.invMan.buyItem(self.invMan, snack_name), width=10).grid(row=3, column=7, columnspan=1, pady=5)
 
     def add_hk(self, room_num, time):
         if addHousekeepingEntry(int(room_num), time):

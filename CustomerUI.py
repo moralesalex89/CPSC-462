@@ -202,7 +202,7 @@ class CustomerUI:
     def reserve(self,start_date,end_date,room_id,price):
         if self.resMan.create_reservation(self.resMan,start_date,end_date,self.activeUser.get_userID(),room_id) == True:
             diff = end_date-start_date
-            totalprice = diff.days * price
+            totalprice = (diff.days +1) * price
             add_payment(self.activeUser.get_userID(),totalprice,"Room reservation")
             self.activeUser.login_user(self.activeUser.get_username())
             self.booking_press()

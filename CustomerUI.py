@@ -46,6 +46,7 @@ class dateEntry:
             self.Entry.delete(0,"end")
             self.Entry.insert(0,'MM/DD/YY')
 
+
 class CustomerUI:
     def __init__(self, UI_Controller):
         self.UI = UI_Controller
@@ -352,7 +353,31 @@ class CustomerUI:
 
     def account_info(self):
         self.clear_frames()
-        #Can someone who used the User class more than me do this one please
+        print(self.activeUser.get_username())
+        ttk.Label(self.center, text="Username: %s" % self.activeUser.get_username()).grid(column=0, row=0)
+        ttk.Button(self.center, text="Change Password", command=lambda: self.change_password_press()).grid(column=0, row=1, columnspan=2)
+        ttk.Button(self.center, text="Go Back", command=lambda: self.account_press()).grid()
+
+    def change_password_press(self):
+        self.clear_frames()
+        password = self.UI.make_form(self.center, "Enter New Password: ", 0, 1)
+        pass_check = self.UI.make_form(self.center, "Re-enter New Password: ", 0, 2)
+        ttk.Button(self.center, text="Change Password", command=lambda: self.pass_change_validate(password.get(), pass_check.get())).grid(columnspan=2)
+        ttk.Button(self.center, text="Go Back", command=lambda: self.account_info()).grid(columnspan=2)
+
+    def pass_change_validate(self, password, pass_check):
+        error = ""
+        if password == "":
+            error = error + " - No password entry\n"
+        else:
+            if password != pass_check:
+                error = error + " - Passwords do not match\n"
+        if error is "":
+            update_user_password(self.activeUser.get_userID(), password)
+            self.UI.logoutUser()
+            self.UI.display_message_frame("Password has been changed successfully!\nYou will now be logged out.")
+        if error != "":
+            self.UI.display_message_frame(error)
 
     def display_transactions(self, result=None, page=0):
         self.clear_frames()

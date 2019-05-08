@@ -49,6 +49,7 @@ class OceanLuxuryGUI:
 		self.signup = ttk.Button(self.sidebar_frame, text="Sign Up", image=self.img_06, command=self.signupUser)
 		self.logout = ttk.Button(self.sidebar_frame, text="Logout", image=self.img_07, command=self.logoutUser)
 		self.account = ttk.Button(self.sidebar_frame, text="Account", image=self.img_08)
+		self.UI_Controller = CustomerUI(self)
 		self.display_default()
 
 	# places all tkinter objects on the screen in their default settings
@@ -193,8 +194,9 @@ class OceanLuxuryGUI:
 		if error == "":
 			if create_user(username, password, 'Customer', ''):
 				self.UI_Controller.home_press()
+				self.loginUser(username, password)
 				self.display_message_frame("Your account was created successfully!")
-				self.set_sidebar_frame(1)
+
 			else:
 				self.display_message_frame("Your account could not be created!")
 		if error != "":

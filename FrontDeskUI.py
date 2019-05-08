@@ -187,7 +187,6 @@ class FrontDeskUI:
 
     def account_info(self):
         self.clear_frames()
-        print(self.activeUser.get_username())
         ttk.Label(self.center, text="Username: %s" % self.activeUser.get_username()).grid(column=0, row=0)
         ttk.Button(self.center, text="Change Password", command=lambda: self.change_password_press()).grid(column=0, row=1, columnspan=2)
         ttk.Button(self.center, text="Go Back", command=lambda: self.account_press()).grid()

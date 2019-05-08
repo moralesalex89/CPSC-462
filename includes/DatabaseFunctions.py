@@ -1,11 +1,13 @@
 from includes.DatabaseConfig import db
 import bcrypt
 
+
 def db_query(query):
 	# Basic handling of database queries
 	db_cursor = db.cursor(buffered=True)
 	db_cursor.execute(query)
 	return db_cursor
+
 
 def create_user(username, password, user_type, address):
 	# checks to make sure username isn't already taken
@@ -20,6 +22,7 @@ def create_user(username, password, user_type, address):
 	db.commit()
 	return True
 
+
 # @return - list of reservation details obtained from a user_id
 def get_reservation(user_id):
 	query = "SELECT * FROM Reservations WHERE user_id = '%d'" % user_id
@@ -29,10 +32,12 @@ def get_reservation(user_id):
 	result.append(result2[0])
 	return result
 
+
 def get_id(username):
 	query = "SELECT user_id FROM Users WHERE name = '%s'" % username
 	result = db_query(query).fetchone()
 	return result[0]
+
 
 def verify_login(username, password):
 	query = "SELECT pass FROM Users WHERE name = '%s'" % username
@@ -45,6 +50,7 @@ def verify_login(username, password):
 	verified = bcrypt.checkpw(password.encode('utf8'), hashed_pass.encode('utf8'))
 	return verified
 
+
 def retrieve_user(username):
 	query = "SELECT * FROM Users WHERE name = '%s'" % username
 	result = db_query(query).fetchone()
@@ -52,9 +58,17 @@ def retrieve_user(username):
 		return False
 	return {'id': result[0], 'username': result[1], 'user_type': result[3]}
 
+
 def retrieve_user_by_id(id):
 	query = "SELECT * FROM Users WHERE user_id = '%s'" % id
 	result = db_query(query).fetchone()
 	if result is None:
 		return False
 	return {'id': result[0], 'username': result[1], 'user_type': result[3]}
+
+
+def update_user_password(id, password):
+	hashed_pass = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
+	query = "UPDATE Users SET pass = '%s' WHERE user_id = '%s'" % (hashed_pass.decode('utf8'), id)
+	result = db_query(query)
+	db.commit()

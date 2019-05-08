@@ -21,7 +21,7 @@ class OceanLuxuryGUI:
 		self.img_05 = PhotoImage(file='OL-Assets/login.png')
 		self.img_06 = PhotoImage(file='OL-Assets/signup.png')
 		self.img_07 = PhotoImage(file='OL-Assets/logout.png')
-		self.img_08 = PhotoImage(file='OL-Assets/blue_button.png')
+		self.img_08 = PhotoImage(file='OL-Assets/account.png')
 		self.img_09 = PhotoImage(file='OL-Assets/about.png')
 
 		# 3 main areas of the screen

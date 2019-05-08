@@ -194,13 +194,16 @@ class CustomerUI:
         self.pop.title("Pay for your reservation")
         msg = "Reserve: %s\nFrom:%s\nTo: %s\nFor: $%s/night" % (room_type,start_date,end_date,price)
         ttk.Label(self.pop,text=msg).grid(row=0,column=1)
-        ttk.Button(self.pop,text="Pay",command=lambda:self.reserve(start_date,end_date,room_id)).grid(row=1,column=0,padx=20,columnspan=2)
+        ttk.Button(self.pop,text="Pay",command=lambda:self.reserve(start_date,end_date,room_id,price)).grid(row=1,column=0,padx=20,columnspan=2)
         ttk.Button(self.pop,text="Cancel",command=self.pop.destroy).grid(row=1,column=2)
     
     #Reserves room described by pay_pop summary and calls reservationManager class
     # if Room was not available when pressed it will prompt user there was an error
-    def reserve(self,start_date,end_date,room_id):
+    def reserve(self,start_date,end_date,room_id,price):
         if self.resMan.create_reservation(self.resMan,start_date,end_date,self.activeUser.get_userID(),room_id) == True:
+            diff = end_date-start_date
+            totalprice = diff.days * price
+            add_payment(self.activeUser.get_userID(),totalprice,"Room reservation")
             self.activeUser.login_user(self.activeUser.get_username())
             self.booking_press()
             self.UI.display_message_frame("Reservation made for %s - %s" % (start_date,end_date))

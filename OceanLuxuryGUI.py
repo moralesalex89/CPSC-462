@@ -175,6 +175,7 @@ class OceanLuxuryGUI:
 	def logoutUser(self):
 		self.UI_Controller = CustomerUI(self)
 		self.activeUser = User(-1, -1, "")
+		self.activeUser.reservation = False
 		self.set_sidebar_frame(0)
 		self.UI_Controller.home_press()
 

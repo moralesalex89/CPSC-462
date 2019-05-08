@@ -1,5 +1,6 @@
 from includes.DatabaseFunctions import *
 
+
 def getRooms():
     room_list = []
     query = "SELECT room_id FROM Rooms"

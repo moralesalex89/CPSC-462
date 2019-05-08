@@ -116,11 +116,11 @@ class FrontDeskUI:
         back_button = ttk.Button(self.center, text="Go Back", command=self.guest_service_press).grid(column=0, row=3, columnspan=2, pady=2)
 
     def check_in_search_press(self, username):
-        reservation_info = self.resManager.checkGuestReservation(username)
+        reservation_info = self.resManager.check_guest_reservation(username)
         if reservation_info is False:
             self.UI.display_message_frame("No reservations found for %s" % username)
             return False
-        room_info = self.resManager.checkRoomInfo(reservation_info[4])
+        room_info = self.resManager.check_room_info(reservation_info[4])
         self.clear_frames()
         ttk.Label(self.center, text="Reservation Found", font=self.font_header).grid(column=0, row=0, padx=0, pady=10, columnspan=2)
         ttk.Label(self.center, text="Check-in Date: ").grid(column=0, row=1)
@@ -138,7 +138,7 @@ class FrontDeskUI:
         back_button = ttk.Button(self.center, text="Go Back", command=self.check_in_press).grid(column=0, row=7, columnspan=2, pady=2)
 
     def check_in_guest(self, reservation_info):
-        self.resManager.updateReservation(reservation_info[4], 'Reserved')
+        self.resManager.update_reservation('Reserved', reservation_info[4])
         self.check_in_search_press(retrieve_user_by_id(reservation_info[3])['username'])
         self.UI.display_message_frame("Guest has been successfully checked in!")
 
@@ -153,11 +153,11 @@ class FrontDeskUI:
         back_button = ttk.Button(self.center, text="Go Back", command=self.guest_service_press).grid(column=0, row=3, columnspan=2, pady=2)
 
     def check_out_search_press(self, username):
-        reservation_info = self.resManager.checkGuestReservation(username)
+        reservation_info = self.resManager.check_guest_reservation(username)
         if reservation_info is False:
             self.UI.display_message_frame("No reservations found for %s" % username)
             return False
-        room_info = self.resManager.checkRoomInfo(reservation_info[4])
+        room_info = self.resManager.check_room_info(reservation_info[4])
         self.clear_frames()
         ttk.Label(self.center, text="Reservation Found", font=self.font_header).grid(column=0, row=0, padx=0, pady=10, columnspan=2)
         ttk.Label(self.center, text="Check-in Date: ").grid(column=0, row=1)
@@ -175,7 +175,7 @@ class FrontDeskUI:
         back_button = ttk.Button(self.center, text="Go Back", command=self.check_out_press).grid(column=0, row=7, columnspan=2, pady=2)
 
     def check_out_guest(self, reservation_info):
-        self.resManager.updateReservation(reservation_info[4], 'Empty')
+        self.resManager.update_reservation('Empty', reservation_info[4])
         self.check_out_search_press(retrieve_user_by_id(reservation_info[3])['username'])
         self.UI.display_message_frame("Guest has been successfully checked out")
 

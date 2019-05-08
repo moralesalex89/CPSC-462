@@ -15,12 +15,11 @@ def get_payment_list(user_id):
 
 def search_transaction(payment_id):
     query = "SELECT * FROM Payments WHERE payment_id = %d" % payment_id
-    result = db_query().fetchone()
+    result = db_query(query).fetchone()
     return result
 
 
 def clear_transaction(payment_id):
     query = "UPDATE Payments SET charge = 0 WHERE payment_id = %d" % payment_id
-    result = db_query(query).fetchone()
+    result = db_query(query)
     db.commit()
-    return result[0] is not None

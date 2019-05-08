@@ -134,9 +134,9 @@ class OceanLuxuryGUI:
 		self.center_frame.grid_forget()
 		self.backup_frame.grid()
 
-	def make_form(self, frame, name, col, row,shw=None, width=20):
+	def make_form(self, frame, name, col, row, shw=None, width=20):
 		ttk.Label(frame, text=name, font=self.defont).grid(column=col, row=row)
-		value = ttk.Entry(frame, width=width, font=self.defont,show=shw)
+		value = ttk.Entry(frame, width=width, font=self.defont, show=shw)
 		value.grid(column=col+1, row=row)
 		return value
 

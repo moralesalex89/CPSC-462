@@ -346,15 +346,20 @@ class CustomerUI:
         self.clear_frames()
         if result is None:
             result = get_payment_list(self.activeUser.get_userID())
-        if page >= 10:
-            ttk.Button(self.center, text="<<", command=lambda: self.display_transactions(result, 0, page-10))
-        if (len(result) - page) >= 10:
-            ttk.Button(self.center, text=">>", command=lambda: self.display_transactions(result, 0, page+10))
+        left_btn = ttk.Button(self.center, text="<<", command=lambda: self.display_transactions(result, page - 10))
+        left_btn.grid(column=0, row=0)
+        right_btn = ttk.Button(self.center, text=">>", command=lambda: self.display_transactions(result, page + 10))
+        right_btn.grid(column=2, row=0)
+        if page < 10:
+            left_btn.config(state=DISABLED)
+        if (len(result) - page) < 10:
+            right_btn.config(state=DISABLED)
+
         headers = ["Payment ID", "Charge", "Info"]
-        self.UI.display_headers(headers, 0)
+        self.UI.display_headers(headers, 1)
         for index in range(min(10, len(result) - page)):
-            entry = ['%s' % result[index+page][0], '%s' % result[index+page][2], '%s' % result[index+page][3]]
-            self.UI.display_headers(entry, index)
+            entry = ['%s' % result[index+page][0], '$%s' % result[index+page][2], '%s' % result[index+page][3]]
+            self.UI.display_headers(entry, index+2)
 
     # ____________________OTHER____________________
     def clear_frames(self):

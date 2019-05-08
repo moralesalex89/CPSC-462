@@ -1,5 +1,6 @@
 from includes.DatabaseConfig import db
 from tkinter import messagebox
+from PaymentManager import *
 
 
 class InventoryManager:
@@ -12,11 +13,16 @@ class InventoryManager:
 		result = db_cursor.fetchall()
 		return result
 
-	def buy_item(self, food_name):
+	def buy_item(self, food_name, user_id, cost, note):
+
 		db_cursor = db.cursor()
 		query = "UPDATE Food_Inventory SET stock = stock - 1 WHERE name = '%s'" % food_name
 		db_cursor.execute(query)
 		db.commit()
+
+		add_payment(user_id, cost, note)
+
+
 		print(food_name + " snack purchased!")
 		return True
 

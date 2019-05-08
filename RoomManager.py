@@ -19,6 +19,6 @@ def getOpenRooms():
 
 
 def getRoomID(activeUser):
-    query = "SELECT room_id FROM Reservation WHERE user_id = '%s'" % activeUser.get_userID()
+    query = "SELECT room_id FROM Reservations WHERE user_id = '%s'" % activeUser.get_userID()
     result = db_query(query).fetchone()
     return result[0]

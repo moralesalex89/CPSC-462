@@ -57,7 +57,7 @@ class CustomerUI:
         self.activeUser = UI_Controller.activeUser
         self.resMan = resManager
         self.invMan = InventoryManager
-        self.roomManager = RoomManager
+        self.roomManager = RoomManager()
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')
@@ -216,7 +216,8 @@ class CustomerUI:
     # ____________________SERVICES____________________
     def services_press(self):
         self.clear_frames()
-        if(self.roomManager.getRoomID(self.activeUser.get_userID())):
+        user_id = self.activeUser.get_userID()
+        if self.roomManager.getRoomID(user_id):
             ttk.Button(self.center, text="Food Service", command=self.food_service_press).grid()
             ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
         else:

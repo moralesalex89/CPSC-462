@@ -4,7 +4,7 @@ from includes.DatabaseFunctions import *
 class resManager:
 	def check_reservations(self ,startTime,endTime):
 		db_cursor = db.cursor()
-		query = "SELECT room_id,room_type FROM Rooms Ro WHERE Ro.room_id NOT IN (SELECT room_id FROM Reservations WHERE ((startTime >= '%s') OR (endTime >= '%s')))" %(startTime,endTime)
+		query = "SELECT room_id,room_type FROM Rooms Ro WHERE Ro.room_id NOT IN (SELECT room_id FROM Reservations WHERE ((startTime <= '%s') AND (endTime >= '%s')))" %(startTime,endTime)
 		db_cursor.execute(query)
 		return list(db_cursor)
 

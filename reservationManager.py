@@ -1,4 +1,6 @@
 from includes.DatabaseFunctions import *
+
+
 class resManager:
 	def check_reservations(self ,startTime,endTime):
 		db_cursor = db.cursor()
@@ -11,13 +13,6 @@ class resManager:
 		if not user_info:
 			return False
 		query = "SELECT * FROM Reservations WHERE user_id = %d" % user_info['id']
-		result = db_query(query).fetchone()
-		if result is None:
-			return False
-		return result
-
-	def check_room_info(self, room_id):
-		query = "SELECT * FROM Rooms WHERE room_id = %d" % room_id
 		result = db_query(query).fetchone()
 		if result is None:
 			return False

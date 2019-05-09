@@ -121,7 +121,7 @@ class FrontDeskUI:
         if reservation_info is False:
             self.UI.display_message_frame("No reservations found for %s" % username)
             return False
-        room_info = self.resManager.check_room_info(reservation_info[4])
+        room_info = self.roomManager.check_room_info(reservation_info[4])
         self.clear_frames()
         ttk.Label(self.center, text="Reservation Found", font=self.font_header).grid(column=0, row=0, padx=0, pady=10, columnspan=2)
         ttk.Label(self.center, text="Check-in Date: ").grid(column=0, row=1)

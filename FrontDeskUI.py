@@ -159,7 +159,7 @@ class FrontDeskUI:
         times = fetch_times()
         timeSlots = fetch_housekeeping_slots()
         open_times = []
-        open_rooms = get_open_rooms()
+        open_rooms = self.roomManager.getOpenRooms()
         len_times = len(times)
 
         for time_range in range(len_times):

@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import ttk
-from User import User
 from reservationManager import resManager
 from InventoryManager import InventoryManager
 import datetime
@@ -212,11 +211,10 @@ class CustomerUI:
     def services_press(self):
         self.clear_frames()
         uid = self.activeUser.get_userID()
-        rid = get_room_id(uid)
+        rid = self.roomManager.getRoomID(uid)
         today = datetime.date.today()
 
         if self.resMan.is_checked_in(self.resMan, uid, rid, today):
-        if(self.roomManager.getRoomID(self.activeUser.get_userID())):
             ttk.Button(self.center, text="Food Service", command=self.food_service_press).grid()
             ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
         else:

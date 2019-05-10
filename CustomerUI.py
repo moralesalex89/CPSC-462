@@ -351,7 +351,7 @@ class CustomerUI:
             option = StringVar(self.center)
             ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+1)
             time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+1)
-            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(self.roomManager.getRoomID(self.activeUser), option.get())).grid(column=0, row=len_times+2, columnspan=2)
+            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(self.roomManager.getRoomID(self.activeUser.get_userID()), option.get())).grid(column=0, row=len_times+2, columnspan=2)
         else:
             ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+2, columnspan=2)
 

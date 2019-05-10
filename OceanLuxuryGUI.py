@@ -44,7 +44,7 @@ class OceanLuxuryGUI:
 
         # sidebar buttons displayed on the side, used for navigation
         self.home = ttk.Button(self.sidebar_frame, image=self.img_01)
-        self.about = ttk.Button(self.sidebar_frame, image=self.img_02)
+        self.about = ttk.Button(self.sidebar_frame, image=self.img_02, command=self.about_press)
         self.booking = ttk.Button(self.sidebar_frame, image=self.img_03)
         self.services = ttk.Button(self.sidebar_frame, image=self.img_04)
         self.login = ttk.Button(self.sidebar_frame, image=self.img_05, command=self.login_press)

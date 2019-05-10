@@ -5,7 +5,7 @@ from reservationManager import resManager
 from InventoryManager import InventoryManager
 import datetime
 from HKManager import *
-from RoomManager import RoomManager
+from RoomManager import *
 from PaymentManager import *
 
 #Creates entry field to recieve valid dates
@@ -57,7 +57,6 @@ class CustomerUI:
         self.activeUser = UI_Controller.activeUser
         self.resMan = resManager
         self.invMan = InventoryManager
-        self.roomManager = RoomManager()
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')
@@ -77,11 +76,6 @@ class CustomerUI:
     def home_press(self):
         self.clear_frames()
         ttk.Label(self.center, text="Hello World").grid()
-
-    # ____________________ABOUT____________________
-    def about_press(self):
-        self.clear_frames()
-        ttk.Label(self.center, image= self.UI.img_09,bg=None).grid(sticky="W")
 
     # ____________________BOOKING____________________
     # Success Path
@@ -216,8 +210,11 @@ class CustomerUI:
     # ____________________SERVICES____________________
     def services_press(self):
         self.clear_frames()
-        user_id = self.activeUser.get_userID()
-        if self.roomManager.getRoomID(user_id):
+        uid = self.activeUser.get_userID()
+        rid = get_room_id(uid)
+        today = datetime.date.today()
+
+        if self.resMan.is_checked_in(self.resMan, uid, rid, today):
             ttk.Button(self.center, text="Food Service", command=self.food_service_press).grid()
             ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
         else:
@@ -322,37 +319,50 @@ class CustomerUI:
             ttk.Label(self.center, text=snack_price).grid(column=displaycol + 4, row=displayrow, columnspan=1)
 
 
-
     def add_hk(self, room_num, time):
-        if addHousekeepingEntry(int(room_num), time):
+        if add_housekeeping_entry(int(room_num), time):
             self.room_maintenance_press()
             self.UI.display_message_frame("Housekeeping scheduled successfully")
         else:
             self.room_maintenance_press()
             self.UI.display_message_frame("Housekeeping scheduling failed")
 
+    def remove_hk(self, room_num):
+        remove_housekeeping_entry(room_num)
+        self.room_maintenance_press()
+        self.UI.display_message_frame("Housekeeping request canceled")
+
     def room_maintenance_press(self):
         self.clear_frames()
-        ttk.Label(self.center, font=self.defont, text="Time").grid(column=0, row=0)
-        ttk.Label(self.center, font=self.defont, text="Open Slots").grid(column=1, row=0)
-        times = fetchTimes()
-        timeSlots = fetchHousekeepingSlots()
+        ttk.Label(self.center, font=self.defont, text="Time").grid(column=0, row=1)
+        ttk.Label(self.center, font=self.defont, text="Open Slots").grid(column=1, row=1)
+        times = fetch_times()
+        timeSlots = fetch_housekeeping_slots()
         open_times = []
         len_times = len(times)
 
         for time_range in range(len_times):
-            ttk.Label(self.center, font=self.defont, text=times[time_range]).grid(column=0, row=time_range+1)
-            ttk.Label(self.center, font=self.defont, text=timeSlots[time_range]).grid(column=1, row=time_range+1)
+            ttk.Label(self.center, font=self.defont, text=times[time_range]).grid(column=0, row=time_range+2)
+            ttk.Label(self.center, font=self.defont, text=timeSlots[time_range]).grid(column=1, row=time_range+2)
             if timeSlots[time_range] > 0:
                 open_times.append(times[time_range])
 
         if len(open_times) > 0:
             option = StringVar(self.center)
-            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+1)
-            time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+1)
-            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(self.roomManager.getRoomID(self.activeUser), option.get())).grid(column=0, row=len_times+2, columnspan=2)
+            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+2)
+            time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+2)
+            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(get_room_id(self.activeUser.get_userID()), option.get())).grid(column=0, row=len_times+3, columnspan=2)
+
         else:
-            ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+1, columnspan=2)
+            ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+2, columnspan=2)
+
+        result = get_my_entry(get_room_id(self.activeUser.get_userID()))
+        if result is not False:
+            curr_hk = "Your current housekeeping time is at %s" % result[0]
+            ttk.Label(self.center, font=self.defont, text=curr_hk).grid(column=0, row=0, columnspan=2)
+            ttk.Button(self.center, text="Cancel Housekeeping", command=lambda: self.remove_hk(get_room_id(self.activeUser.get_userID()))).grid(column=0, row=len_times+4, columnspan=2)
+
+
 
 # ____________________ACCOUNT____________________
     def account_press(self):

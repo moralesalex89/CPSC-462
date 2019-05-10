@@ -2,9 +2,9 @@ from tkinter import *
 from tkinter import ttk
 from User import User
 from HKManager import *
-from reservationManager import resManager
+from RoomManager import *
+from reservationManager import *
 from InventoryManager import InventoryManager
-from RoomManager import RoomManager
 from includes.DatabaseFunctions import *
 from PaymentManager import *
 
@@ -21,7 +21,6 @@ class FrontDeskUI:
         self.activeUser = UI_Controller.activeUser
         self.resManager = resManager()
         self.invManager = InventoryManager()
-        self.roomManager = RoomManager()
 
     # ____________________HOME____________________
     def home_press(self):
@@ -33,75 +32,8 @@ class FrontDeskUI:
         self.clear_frames()
         ttk.Label(self.center, text="You are in FrontDeskUI").grid()
 
-    # ____________________BOOKING____________________
+    # ____________________CHECK IN/OUT____________________
     def booking_press(self):
-        self.clear_frames()
-
-    # ____________________SERVICES____________________
-    def services_press(self):
-        self.clear_frames()
-        ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
-        ttk.Button(self.center, text="Reset Maintenance Schedule", command=self.reset_maintenance_press).grid()
-        ttk.Button(self.center, text="Guest Services", command=self.guest_service_press).grid()
-        ttk.Button(self.center, text="Food Services", command=lambda: self.food_service_press()).grid()
-
-    def reset_maintenance_press(self):
-        self.clear_frames()
-        ttk.Label(self.center, font=self.defont, text="WARNING").grid()
-        ttk.Label(self.center, font=self.defont, text="Housekeeping entries are only to be cleared after all requests are cleared for the day").grid()
-        ttk.Label(self.center, font=self.defont, text="Please re-enter your password to confirm a housekeeping reset").grid()
-        password = ttk.Entry(self.center, font=self.defont)
-        password.grid()
-        ttk.Button(self.center, text="Clear Housekeeping", command=lambda: self.clear_hk(password.get())).grid()
-
-    def food_service_press(self):
-        self.clear_frames()
-        ttk.Button(self.center, text="Restock Food Inventory", command=lambda: self.invManager.restock_items()).grid()
-        ttk.Button(self.center, text="View Food Inventory", command=lambda: self.invManager.view_inventory()).grid()
-
-    def clear_hk(self, password):
-        #if password is correct, filler code used here for testing
-        if password == "correct":
-            clearHousekeeping()
-        self.room_maintenance_press()
-        self.UI.display_message_frame("Housekeeping entries successfully cleared!")
-
-    def add_hk(self, room_num, time):
-        if addHousekeepingEntry(int(room_num), time):
-            self.room_maintenance_press()
-            self.UI.display_message_frame("Housekeeping scheduled successfully")
-        else:
-            self.room_maintenance_press()
-            self.UI.display_message_frame("Housekeeping scheduling failed")
-
-    def room_maintenance_press(self):
-        self.clear_frames()
-        ttk.Label(self.center, font=self.defont, text="Time").grid(column=0, row=0)
-        ttk.Label(self.center, font=self.defont, text="Open Slots").grid(column=1, row=0)
-        times = fetchTimes()
-        timeSlots = fetchHousekeepingSlots()
-        open_times = []
-        open_rooms = self.roomManager.getOpenRooms()
-        len_times = len(times)
-
-        for time_range in range(len_times):
-            ttk.Label(self.center, font=self.defont, text=times[time_range]).grid(column=0, row=time_range+1)
-            ttk.Label(self.center, font=self.defont, text=timeSlots[time_range]).grid(column=1, row=time_range+1)
-            if timeSlots[time_range] > 0:
-                open_times.append(times[time_range])
-
-        if len(open_times) > 0:
-            option = StringVar(self.center)
-            room_num = StringVar(self.center)
-            ttk.Label(self.center, font = self.defont, text="Room: ").grid(column=0, row=len_times+1)
-            ttk.OptionMenu(self.center, room_num, open_rooms[0], *open_rooms).grid(column=1, row = len_times+1)
-            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+2)
-            ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+2)
-            ttk.Button(self.center, text="Schedule Housekeeping", command=lambda: self.add_hk(room_num.get(), option.get())).grid(column=0, row=len_times+3, columnspan=2)
-        else:
-            ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+1, columnspan=2)
-
-    def guest_service_press(self):
         self.clear_frames()
         ttk.Button(self.center, text="Check-in Guest", command=self.check_in_press).grid(column=0, row=0)
         ttk.Button(self.center, text="Check-out Guest", command=self.check_out_press).grid(column=1, row=0)
@@ -114,14 +46,14 @@ class FrontDeskUI:
         guest_username.grid(column=1, row=1)
         guest_username.bind('<Return>', lambda event: self.check_in_search_press(guest_username.get()))
         search_button = ttk.Button(self.center, width=50, text="Search", command=lambda: self.check_in_search_press(guest_username.get())).grid(column=0, row=2, columnspan=2, pady=5)
-        back_button = ttk.Button(self.center, text="Go Back", command=self.guest_service_press).grid(column=0, row=3, columnspan=2, pady=2)
+        back_button = ttk.Button(self.center, text="Go Back", command=self.booking_press).grid(column=0, row=3, columnspan=2, pady=2)
 
     def check_in_search_press(self, username):
         reservation_info = self.resManager.check_guest_reservation(username)
         if reservation_info is False:
             self.UI.display_message_frame("No reservations found for %s" % username)
             return False
-        room_info = self.roomManager.check_room_info(reservation_info[4])
+        room_info = self.resManager.check_room_info(reservation_info[4])
         self.clear_frames()
         ttk.Label(self.center, text="Reservation Found", font=self.font_header).grid(column=0, row=0, padx=0, pady=10, columnspan=2)
         ttk.Label(self.center, text="Check-in Date: ").grid(column=0, row=1)
@@ -151,14 +83,14 @@ class FrontDeskUI:
         guest_username.grid(column=1, row=1)
         guest_username.bind('<Return>', lambda event: self.check_in_search_press(guest_username.get()))
         search_button = ttk.Button(self.center, width=50, text="Search", command=lambda: self.check_out_search_press(guest_username.get())).grid(column=0, row=2, columnspan=2, pady=5)
-        back_button = ttk.Button(self.center, text="Go Back", command=self.guest_service_press).grid(column=0, row=3, columnspan=2, pady=2)
+        back_button = ttk.Button(self.center, text="Go Back", command=self.booking_press).grid(column=0, row=3, columnspan=2, pady=2)
 
     def check_out_search_press(self, username):
         reservation_info = self.resManager.check_guest_reservation(username)
         if reservation_info is False:
             self.UI.display_message_frame("No reservations found for %s" % username)
             return False
-        room_info = self.roomManager.check_room_info(reservation_info[4])
+        room_info = self.resManager.check_room_info(reservation_info[4])
         self.clear_frames()
         ttk.Label(self.center, text="Reservation Found", font=self.font_header).grid(column=0, row=0, padx=0, pady=10, columnspan=2)
         ttk.Label(self.center, text="Check-in Date: ").grid(column=0, row=1)
@@ -180,38 +112,76 @@ class FrontDeskUI:
         self.check_out_search_press(retrieve_user_by_id(reservation_info[3])['username'])
         self.UI.display_message_frame("Guest has been successfully checked out")
 
-    #__________ACCOUNT__________
-    def account_press(self):
+
+    # ____________________SERVICES____________________
+    def services_press(self):
         self.clear_frames()
-        ttk.Button(self.center, text="Account Information", command=lambda: self.account_info()).grid()
+        ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
+        ttk.Button(self.center, text="Reset Maintenance Schedule", command=self.reset_maintenance_press).grid()
+        ttk.Button(self.center, text="Food Services", command=lambda: self.food_service_press()).grid()
         ttk.Button(self.center, text="Review Transactions", command=lambda: self.display_transactions()).grid()
 
-    def account_info(self):
+    def reset_maintenance_press(self):
         self.clear_frames()
-        ttk.Label(self.center, text="Username: %s" % self.activeUser.get_username()).grid(column=0, row=0)
-        ttk.Button(self.center, text="Change Password", command=lambda: self.change_password_press()).grid(column=0, row=1, columnspan=2)
-        ttk.Button(self.center, text="Go Back", command=lambda: self.account_press()).grid()
+        ttk.Label(self.center, font=self.defont, text="WARNING").grid()
+        ttk.Label(self.center, font=self.defont, text="Housekeeping entries are only to be cleared after all requests are cleared for the day").grid()
+        ttk.Label(self.center, font=self.defont, text="Please re-enter your password to confirm a housekeeping reset").grid()
+        password = ttk.Entry(self.center, font=self.defont)
+        password.grid()
+        ttk.Button(self.center, text="Clear Housekeeping", command=lambda: self.clear_hk(password.get())).grid()
 
-    def change_password_press(self):
+    def food_service_press(self):
         self.clear_frames()
-        password = self.UI.make_form(self.center, "Enter New Password: ", 0, 1)
-        pass_check = self.UI.make_form(self.center, "Re-enter New Password: ", 0, 2)
-        ttk.Button(self.center, text="Change Password", command=lambda: self.pass_change_validate(password.get(), pass_check.get())).grid(columnspan=2)
-        ttk.Button(self.center, text="Go Back", command=lambda: self.account_info()).grid(columnspan=2)
+        ttk.Button(self.center, text="Restock Food Inventory", command=lambda: self.invManager.restock_items()).grid()
+        ttk.Button(self.center, text="View Food Inventory", command=lambda: self.invManager.view_inventory()).grid()
 
-    def pass_change_validate(self, password, pass_check):
-        error = ""
-        if password == "":
-            error = error + " - No password entry\n"
+    def clear_hk(self, password):
+        #if password is correct, filler code used here for testing
+        if password == "correct":
+            clear_housekeeping()
+        self.room_maintenance_press()
+        self.UI.display_message_frame("Housekeeping entries successfully cleared!")
+
+    def add_hk(self, room_num, time):
+        if add_housekeeping_entry(int(room_num), time):
+            self.room_maintenance_press()
+            self.UI.display_message_frame("Housekeeping scheduled successfully")
         else:
-            if password != pass_check:
-                error = error + " - Passwords do not match\n"
-        if error is "":
-            update_user_password(self.activeUser.get_userID(), password)
-            self.UI.logoutUser()
-            self.UI.display_message_frame("Password has been changed successfully!\nYou will now be logged out.")
-        if error != "":
-            self.UI.display_message_frame(error)
+            self.room_maintenance_press()
+            self.UI.display_message_frame("Housekeeping scheduling failed")
+
+    def room_maintenance_press(self):
+        self.clear_frames()
+        ttk.Label(self.center, font=self.defont, text="Time").grid(column=0, row=0)
+        ttk.Label(self.center, font=self.defont, text="Open Slots").grid(column=1, row=0)
+        ttk.Label(self.center, font=self.defont, text="Rooms Scheduled").grid(column=2, row=0)
+        times = fetch_times()
+        timeSlots = fetch_housekeeping_slots()
+        open_times = []
+        open_rooms = get_open_rooms()
+        len_times = len(times)
+
+        for time_range in range(len_times):
+            ttk.Label(self.center, font=self.defont, text=times[time_range]).grid(column=0, row=time_range+1)
+            ttk.Label(self.center, font=self.defont, text=timeSlots[time_range]).grid(column=1, row=time_range+1)
+            room_entries = get_slot_entries(times[time_range])
+            room_str = ""
+            for room_entry in room_entries:
+                room_str = room_str + "%s " % room_entry
+            ttk.Label(self.center, font=self.defont, text=room_str).grid(column=2, row=time_range+1)
+            if timeSlots[time_range] > 0:
+                open_times.append(times[time_range])
+
+        if len(open_times) > 0:
+            option = StringVar(self.center)
+            room_num = StringVar(self.center)
+            ttk.Label(self.center, font = self.defont, text="Room: ").grid(column=0, row=len_times+1)
+            ttk.OptionMenu(self.center, room_num, open_rooms[0], *open_rooms).grid(column=1, row = len_times+1, columnspan=3)
+            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+2)
+            ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+2, columnspan=3)
+            ttk.Button(self.center, text="Schedule Housekeeping", command=lambda: self.add_hk(room_num.get(), option.get())).grid(column=0, row=len_times+3, columnspan=3)
+        else:
+            ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+1, columnspan=3)
 
     def dispute_transaction(self, p_id):
         self.clear_frames()
@@ -248,6 +218,39 @@ class FrontDeskUI:
         self.clear_frames()
         p_id = self.UI.make_form(self.center, "Payment ID: ", 0, 0)
         ttk.Button(self.center, text="Search", command=lambda: self.dispute_transaction(p_id.get())).grid(column=0, row=1, columnspan=3)
+
+    #__________ACCOUNT__________
+    def account_press(self):
+        self.clear_frames()
+        ttk.Button(self.center, text="Account Information", command=lambda: self.account_info()).grid()
+
+    def account_info(self):
+        self.clear_frames()
+        ttk.Label(self.center, text="Username: %s" % self.activeUser.get_username()).grid(column=0, row=0)
+        ttk.Button(self.center, text="Change Password", command=lambda: self.change_password_press()).grid(column=0, row=1, columnspan=2)
+        ttk.Button(self.center, text="Go Back", command=lambda: self.account_press()).grid()
+
+    def change_password_press(self):
+        self.clear_frames()
+        password = self.UI.make_form(self.center, "Enter New Password: ", 0, 1)
+        pass_check = self.UI.make_form(self.center, "Re-enter New Password: ", 0, 2)
+        ttk.Button(self.center, text="Change Password", command=lambda: self.pass_change_validate(password.get(), pass_check.get())).grid(columnspan=2)
+        ttk.Button(self.center, text="Go Back", command=lambda: self.account_info()).grid(columnspan=2)
+
+    def pass_change_validate(self, password, pass_check):
+        error = ""
+        if password == "":
+            error = error + " - No password entry\n"
+        else:
+            if password != pass_check:
+                error = error + " - Passwords do not match\n"
+        if error is "":
+            update_user_password(self.activeUser.get_userID(), password)
+            self.UI.logoutUser()
+            self.UI.display_message_frame("Password has been changed successfully!\nYou will now be logged out.")
+        if error != "":
+            self.UI.display_message_frame(error)
+
 
     # ____________________OTHER____________________
     def clear_frames(self):

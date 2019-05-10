@@ -1,5 +1,6 @@
 from includes.DatabaseFunctions import *
 
+
 class resManager:
     def check_reservations(self, startTime, endTime):
         db_cursor = db.cursor()
@@ -18,20 +19,12 @@ class resManager:
             return False
         return result
 
-    def check_room_info(self, room_id):
-        query = "SELECT * FROM Rooms WHERE room_id = %d" % room_id
-        result = db_query(query).fetchone()
-        if result is None:
-            return False
-        return result
-
-    def create_reservation(self, startTime, endTime, userId, roomID):
-        db_cursor = db.cursor()
-        query = "INSERT INTO Reservations (startTime,EndTime,user_id,room_id) VALUES ('%s','%s','%d','%d')" % (
-        startTime, endTime, userId, roomID)
-        db_cursor.execute(query)
-        db.commit()
-        return True
+	def create_reservation(self,startTime,endTime,userId,roomID):
+		db_cursor = db.cursor()
+		query = "INSERT INTO Reservations (startTime,EndTime,user_id,room_id) VALUES ('%s','%s','%d','%d')" % (startTime,endTime,userId,roomID)
+		db_cursor.execute(query)
+		db.commit()
+		return True
 
     def cancel_reservation(self):
         pass

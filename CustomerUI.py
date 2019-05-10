@@ -5,7 +5,7 @@ from reservationManager import resManager
 from InventoryManager import InventoryManager
 import datetime
 from HKManager import *
-from RoomManager import *
+from RoomManager import RoomManager
 from PaymentManager import *
 
 #Creates entry field to recieve valid dates
@@ -57,6 +57,7 @@ class CustomerUI:
         self.activeUser = UI_Controller.activeUser
         self.resMan = resManager
         self.invMan = InventoryManager
+        self.roomManager = RoomManager
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')
@@ -215,6 +216,7 @@ class CustomerUI:
         today = datetime.date.today()
 
         if self.resMan.is_checked_in(self.resMan, uid, rid, today):
+        if(self.roomManager.getRoomID(self.activeUser.get_userID())):
             ttk.Button(self.center, text="Food Service", command=self.food_service_press).grid()
             ttk.Button(self.center, text="Room Maintenance", command=self.room_maintenance_press).grid()
         else:
@@ -349,10 +351,9 @@ class CustomerUI:
 
         if len(open_times) > 0:
             option = StringVar(self.center)
-            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+2)
-            time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+2)
-            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(get_room_id(self.activeUser.get_userID()), option.get())).grid(column=0, row=len_times+3, columnspan=2)
-
+            ttk.Label(self.center, font=self.defont, text="Time: ").grid(column=0, row=len_times+1)
+            time_options = ttk.OptionMenu(self.center, option, open_times[0], *open_times).grid(column=1, row=len_times+1)
+            ttk.Button(self.center, text="Request Housekeeping", command=lambda: self.add_hk(self.roomManager.getRoomID(self.activeUser), option.get())).grid(column=0, row=len_times+2, columnspan=2)
         else:
             ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+2, columnspan=2)
 

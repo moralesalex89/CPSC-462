@@ -48,7 +48,10 @@ class resManager:
         status = db_query(query).fetchone()
         query = "SELECT user_id FROM Reservations WHERE room_id = %d AND ((startTime <= '%s') AND (endTime >= '%s'))" % (room_id, today, today)
         result = db_query(query).fetchone()
-        if result == user_id and status == 'Reserved':
-            return True
+        if status is not None and result is not None:
+            if result[0] == user_id and status[0] == 'Reserved':
+                return True
+            else:
+                return False
         else:
             return False

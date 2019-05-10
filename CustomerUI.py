@@ -355,11 +355,11 @@ class CustomerUI:
         else:
             ttk.Label(self.center, font=self.defont, text="All housekeeping hours are currently booked").grid(column=0, row=len_times+2, columnspan=2)
 
-        result = get_my_entry(get_room_id(self.activeUser.get_userID()))
+        result = get_my_entry(self.roomManager.getRoomID(self.activeUser.get_userID()))
         if result is not False:
             curr_hk = "Your current housekeeping time is at %s" % result[0]
             ttk.Label(self.center, font=self.defont, text=curr_hk).grid(column=0, row=0, columnspan=2)
-            ttk.Button(self.center, text="Cancel Housekeeping", command=lambda: self.remove_hk(get_room_id(self.activeUser.get_userID()))).grid(column=0, row=len_times+4, columnspan=2)
+            ttk.Button(self.center, text="Cancel Housekeeping", command=lambda: self.remove_hk(self.roomManager.getRoomID(self.activeUser.get_userID()))).grid(column=0, row=len_times+4, columnspan=2)
 
 
 

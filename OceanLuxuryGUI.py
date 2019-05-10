@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 from User import User
-from UserManager import *
 from CustomerUI import CustomerUI
 from FrontDeskUI import FrontDeskUI
 from includes.DatabaseFunctions import create_user, verify_login, get_id

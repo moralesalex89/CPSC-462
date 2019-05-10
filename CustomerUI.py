@@ -57,7 +57,7 @@ class CustomerUI:
         self.activeUser = UI_Controller.activeUser
         self.resMan = resManager
         self.invMan = InventoryManager
-        self.roomManager = RoomManager
+        self.roomManager = RoomManager()
         self.img_2bed = PhotoImage(file='OL-Assets/2queen.png')
         self.img_1bed = PhotoImage(file='OL-Assets/1queen.png')
         self.img_suite = PhotoImage(file='OL-Assets/suite.png')

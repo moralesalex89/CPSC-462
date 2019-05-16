@@ -20,3 +20,6 @@ Below are acccount used to test both versions of the UI.
 -----------|----------|-----------|
   Front Desk | admin | admin |
  Guest | abcd | 1234 |
+
+Technical Problems:
+.encode /.decode is varying on machine. Change that line in verify_login() in DatabaseFunctions.py if you run into that problem

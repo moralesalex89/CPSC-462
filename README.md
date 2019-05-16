@@ -13,7 +13,7 @@
 
 ## Test Accounts
 Below are acccount used to test both versions of the UI.
-| User Type | Username | Password  |
-|--|--|--|
-| Front Desk | admin | admin |
-| Guest | abcd | 1234 |
+ User Type | Username | Password  |
+-----------|----------|-----------|
+ Front Desk | admin | admin |
+ Guest | abcd | 1234 |

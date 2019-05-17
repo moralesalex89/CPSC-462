@@ -11,6 +11,10 @@
  - [mysql-connector-python](https://pypi.org/project/mysql-connector-python/)
  `pip install mysql-connector-python`
 
+## Running the Program
+Just run main.py and the program should start up (Asumming python installed is python3)
+`python main.py`
+
 ## Test Accounts
 Below are acccount used to test both versions of the UI.
 

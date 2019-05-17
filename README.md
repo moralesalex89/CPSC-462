@@ -13,6 +13,7 @@
 
 ## Running the Program
 Just run main.py and the program should start up (Asumming python installed is python3)
+
 `python main.py`
 
 ## Test Accounts
